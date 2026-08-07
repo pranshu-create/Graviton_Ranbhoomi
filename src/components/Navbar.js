@@ -80,7 +80,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-3 md:gap-4">
-              <img src="/logo.png" alt="Graviton Robotics Logo" className="h-16 w-auto object-contain" />
+              <img src="/Logo.png" alt="Graviton Robotics Logo" className="h-16 w-auto object-contain" />
               <span className="font-display font-bold text-2xl md:text-3xl text-white tracking-widest hidden sm:block">
                 RAN<span className="text-neon-cyan text-glow-cyan">BHOOMI</span>
               </span>
@@ -88,15 +88,15 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-6">
+          <div className="hidden lg:block">
+            <div className="ml-6 flex items-baseline space-x-3 lg:space-x-4">
               {navLinks.map((link) => {
                 const isActive = pathname === link.path;
                 return (
                   <Link
                     key={link.name}
                     href={link.path}
-                    className={`px-3 py-2 text-xs uppercase tracking-[0.2em] font-mono transition-all duration-300 hover:text-neon-cyan ${
+                    className={`px-2 py-2 text-xs uppercase tracking-[0.15em] lg:tracking-[0.2em] font-mono transition-all duration-300 hover:text-neon-cyan ${
                       isActive ? "text-neon-cyan text-glow-cyan border-b border-neon-cyan" : "text-gray-400"
                     }`}
                   >
@@ -108,20 +108,20 @@ export default function Navbar() {
           </div>
 
           {/* CTA & Auth Desktop */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-3">
             {isLoggedIn ? (
               <>
                 <Link
                   href="/dashboard"
                   style={cutCorners}
-                  className="font-mono text-xs text-neon-cyan border border-neon-cyan px-4 py-2 hover:bg-neon-cyan/10 transition-colors tracking-widest"
+                  className="font-mono text-[11px] text-neon-cyan border border-neon-cyan px-3 py-2 hover:bg-neon-cyan/10 transition-colors tracking-widest"
                 >
                   DASHBOARD
                 </Link>
                 <button
                   onClick={handleLogout}
                   style={cutCorners}
-                  className="font-mono text-xs bg-red-500/20 border border-red-500 text-red-500 px-4 py-2 hover:bg-red-500 hover:text-white transition-all duration-300 tracking-widest"
+                  className="font-mono text-[11px] bg-red-500/20 border border-red-500 text-red-500 px-3 py-2 hover:bg-red-500 hover:text-white transition-all duration-300 tracking-widest"
                 >
                   LOGOUT
                 </button>
@@ -131,14 +131,14 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   style={cutCorners}
-                  className="font-mono text-xs text-neon-cyan border border-neon-cyan px-4 py-2 hover:bg-neon-cyan/10 transition-colors tracking-widest"
+                  className="font-mono text-[11px] text-neon-cyan border border-neon-cyan px-3 py-2 hover:bg-neon-cyan/10 transition-colors tracking-widest"
                 >
                   LOGIN
                 </Link>
                 <Link
                   href="/register"
                   style={cutCorners}
-                  className="font-mono text-xs bg-neon-cyan/20 border border-neon-cyan text-neon-cyan px-4 py-2 hover:bg-neon-cyan hover:text-black transition-all duration-300 tracking-widest"
+                  className="font-mono text-[11px] bg-neon-cyan/20 border border-neon-cyan text-neon-cyan px-3 py-2 hover:bg-neon-cyan hover:text-black transition-all duration-300 tracking-widest"
                 >
                   INITIATE
                 </Link>
@@ -147,7 +147,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-neon-cyan hover:text-white focus:outline-none"
@@ -165,7 +165,7 @@ export default function Navbar() {
              initial={{ opacity: 0, height: 0 }}
              animate={{ opacity: 1, height: "auto" }}
              exit={{ opacity: 0, height: 0 }}
-             className="md:hidden bg-black/85 backdrop-blur-lg border-b border-t border-neon-cyan/25 absolute w-full left-0 overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(77,184,255,0.08)] z-50"
+             className="lg:hidden bg-black/85 backdrop-blur-lg border-b border-t border-neon-cyan/25 absolute w-full left-0 overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(77,184,255,0.08)] z-50"
            >
             <div className="px-4 pt-2 pb-6 flex flex-col space-y-4">
               {navLinks.map((link) => (
