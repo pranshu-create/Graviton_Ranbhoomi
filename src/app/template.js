@@ -38,7 +38,7 @@ export default function Template({ children }) {
           animate={{ scale: 1, opacity: 0 }}
           transition={{ duration: 0.5, delay: 0.9 }}
         >
-          <img src="/logo.png" alt="System Logo" className="w-24 h-24 object-contain mb-8 animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+          <img src="/Logo.png" alt="System Logo" className="w-24 h-24 object-contain mb-8 animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
           <span className="text-neon-cyan font-mono text-xs tracking-[0.4em] uppercase mb-6 text-center">
             ESTABLISHING_UPLINK
           </span>
