@@ -26,6 +26,6 @@ export async function GET(req) {
     return NextResponse.json({ success: true, message: 'Super Admin Pranshu created successfully!' });
   } catch (error) {
     console.error('Setup error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to run setup' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Failed to run setup', details: error.message }, { status: 500 });
   }
 }
