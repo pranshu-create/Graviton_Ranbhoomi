@@ -1,0 +1,280 @@
+ROBO RACE 
+
+Eligibility: 
+
+Open to all students with a self-built robot that meets the event specifications. 
+
+Bot Specifications: 
+
+Weight Limit: Maximum 3 KG (including battery).
+
+Dimensions of the bot: Must be less than 280 mm x 280 mm (length x width), with a height of less than 150 mm. 
+
+Power Source: Maximum 16 – 17 V battery. 
+
+Control: Only wireless bots are allowed. Wired bots will not be permitted. 
+
+Safety: The bot must be safe to operate and must not include hazardous components or emit harmful signals. 
+
+Error: Of only 10% will be considered. 
+
+Race Format: 
+
+Bots will compete on a specially designed obstacle track. 
+
+The objective is to complete the track in the given order in the shortest time while maintaining control and precision. 
+
+Time penalties may be applied; 10 sec for every wall touch/collision/off-track, missed checkpoints cost a 30 sec penalty, 2 free hand touch for the certain area of the track and for every hand touch after that will cost 30 sec, 2 skip allowed for any obstacle that costs 45 sec penalties each. 
+
+Judging Criteria: 
+
+Speed: Time taken to complete the track after totaling penalty time. 
+
+Control: Stability and maneuverability of the bot. 
+
+Completion: Successful navigation of all track segments. Judges' decisions are final and binding. 
+
+ 
+
+Track Details of ROBO RACE  
+
+ 
+
+Description: Robo Race track will be a customized course with various features like speed breakers, ramps, and different terrain surfaces. While specific layouts will be revealed on the day of the competition, a defined starting and finishing line, and a total length of 130-150 feet. Key elements which will include obstacles such as tunnel, curves, a seesaw, a marble pit, and a slippery path designed to challenge robots' ability to navigate different terrains. 
+
+Arena dimensions: A Large size around 45 x 55 square feet, with bot lanes that might start at 35cm wide and be up to 45-55 cm wide at certain checkpoints.
+
+IMPORTANT: GO THROUGH THE OFFICIAL RULEBOOK FOR BETTER UNDERSTANDING OF RULES.  RULES ARE SUBJECT TO CHANGE AT THE DISCRETION OF THE ORGANISERS.
+
+ROBO SOCCER 
+
+Event Description: A manually controlled robot must push the ball into the opponent's goal while defending its own.  
+
+Robot Specifications: 
+
+Size Limit: 300mm x 300mm x 300mm 
+
+Weight: <= 5kg 
+
+Control: Wired/wireless 
+
+Power: Max 16 – 17 V battery (No IC engines) 
+
+Kicking mechanisms prohibited 
+
+Clamps must be fully stationary — no motion, no actuation. 
+
+Error: Of only 10% will be considered. 
+
+Rules and Regulations: 
+
+Match Format: 2 halves of 2 minutes each. 
+
+Timeliness: Late arrivals may face elimination but can rejoin with a penalty. 
+
+Teams switch sides after halftime. 
+
+Tie-breaker: (Golden Goal) if scores are tied. 
+
+Controlled ramming allowed when opponent has the ball. 
+
+Corner trapping for over 5 seconds results in a reset.
+
+Total of 1 minute repair time allowed in case of bot malfunctions.
+
+Arena Details: 
+
+Size: 8.0ft × 5.0ft (Fully covered with artificial grass) with 35cm goalposts. 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IMPORTANT: GO THROUGH THE OFFICIAL RULEBOOK FOR BETTER UNDERSTANDING OF RULES.  RULES ARE SUBJECT TO CHANGE AT THE DISCRETION OF THE ORGANISERS.
+
+ROBO SUMO
+
+
+
+Eligibility: 
+
+Open to all students with a self-built robot that meets the event specifications. 
+
+
+
+Robot Specifications: 
+
+Size Limit: 300mm x 300mm x 300mm 
+
+Weight: <= 5kg 
+
+Control: Wired/wireless 
+
+Power: Max 16 - 17V battery (No IC engines) 
+
+Kicking mechanisms prohibited 
+
+Clamps must be fully stationary — no motion, no actuation. 
+
+Error: Of only 10% will be considered. 
+
+Rules and Regulations: 
+
+Match Format: 3 minutes each. 
+
+Timeliness: Late arrivals may face elimination but can rejoin with a penalty. 
+
+Teams switch sides after halftime. 
+
+Tie-breaker: (Golden Fight) if scores are tied. 
+
+1v1 knockout-style matches held in a square arena (8 ft x 8 ft). 
+
+Objective: Push the opponent’s bot out of the ring.
+
+Total of 1 minute repair time allowed in case of bot malfunctions.
+
+In the absence of a clear winner, judges will determine the outcome based on performance metrics.
+
+Judging Criteria:
+
+Bot Control & Maneuverability
+
+Aggression & Tactical Strategy
+
+Structural Stability & Responsiveness
+
+Judges' decisions are final.
+
+IMPORTANT: GO THROUGH THE OFFICIAL RULEBOOK FOR BETTER UNDERSTANDING OF RULES.  RULES ARE SUBJECT TO CHANGE AT THE DISCRETION OF THE ORGANISERS.
+
+LINE FOLLOWER ROBOT 
+
+Eligibility: 
+
+Open to all students with a self-built robot that meets the event specifications. 
+
+No pre-built carrier boards or kits will be allowed
+
+Bot Specifications: 
+
+Weight Limit: Maximum 1.5 KG (including battery).
+
+Dimensions of the bot: Must be less than 250 mm x 220 mm (length x width), with a height of less than 100 mm. 
+
+Power Source: Maximum 11 – 12 V battery. 
+
+Control: Fully autonomous wireless bots are allowed. 
+
+Sensors: IR or optical sensors only
+
+Indicator: Must include a visible power ON/OFF switch.
+
+Error: Of only 10% will be considered. 
+
+Track Specification: 
+
+Track will consist of a black line on a white background (or vice versa) where Line width will be around 20 mm - 30 mm at almost every point.
+
+Turns: Includes sharp turns, smooth curves, and zig-zag paths. 
+
+Junctions: May include T-junctions, cross junctions, and dead ends.
+
+Surface: Smooth matte finish (no reflections). 
+
+Start/Finish: Clearly marked start and end zones. 
+
+Competition Format:
+
+Each team will get 2 attempts. 
+
+Best timing among attempts will be considered. 
+
+Robot must start only after signal. 
+
+Timer starts when robot crosses the start line. 
+
+Timer stops when robot reaches the finish line.
+
+Penalties:
+
+Off-track: +10 seconds penalty.
+
+Manual touch: +15 seconds penalty per touch. 
+
+Skipping section: +30 seconds penalty. 
+
+Restart: Allowed with +20 seconds penalty. 
+
+Disqualification: 
+
+Found using unfair of remote/manual control 
+
+Unsafe design
+
+Judging Criteria: 
+
+Speed: Time taken to complete the track after totaling penalty time. 
+
+Accuracy: Stability and maneuverability of the bot. 
+
+Completion: Successful navigation of all track segments. Judges' decisions are final and binding. 
+
+Arena Details:
+
+Track size approx.: 8 ft × 12 ft (or larger). 
+
+Indoor environment with controlled lighting. 
+
+No external interference allowed. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IMPORTANT: GO THROUGH THE OFFICIAL RULEBOOK FOR BETTER UNDERSTANDING OF RULES.  RULES ARE SUBJECT TO CHANGE AT THE DISCRETION OF THE ORGANISERS.
+

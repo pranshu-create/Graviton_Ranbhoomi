@@ -1,0 +1,13 @@
+PHASE 5 : PAYMENT SYSTEM
+Replace manual UPI flow.
+Integrate Razorpay.
+Requirements:
+Payment orders
+Webhook verification
+Signature validation
+Automatic payment confirmation
+Duplicate payment prevention
+Refund handling
+Transaction logs
+Admin reconciliation
+Failed payment handling

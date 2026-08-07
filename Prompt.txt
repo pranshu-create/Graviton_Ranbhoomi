@@ -1,0 +1,148 @@
+Username - Ranbhoomi_db
+Password - Pass_Ranbhoomi
+
+
+
+You are an expert full-stack web developer and UI/UX designer.
+I want to create a modern, futuristic event website similar in structure to Ingenium IIT Indore, but NOT copying any of their content.
+Your job is to FIRST ask me ALL necessary questions step-by-step before generating the website.
+Do NOT assume anything. Ask everything.
+---
+STEP 1: REQUIREMENTS COLLECTION
+
+Ask me questions which you want answer of after analyzing mine, in an organized way across these categories:
+1. BASIC DETAILS
+* Event - RANBHOOMI 2026-27
+* Club Name - Graviton Robotics	
+* Theme - Give me suggestions
+* Type - Technical fest of robotics
+* Target audience - all (college students / school / public)
+* Dates and duration yet to be confirmed
+* Location offline
+---
+2. WEBSITE STRUCTURE
+Pages I want:
+
+* Home Page
+* Events / Competitions
+* Workshops
+* Sponsors
+* Team
+* Schedule / Timeline
+* Registration page
+* Gallery
+* FAQs
+* Contact page
+
+Single-page or multi-page website both works which ever you find more attractive?
+
+---
+3. DESIGN & UI
+
+* Color theme - Dark futuristic, something no one would have ever seen for a robotics club
+* Fonts (modern / tech / serif)
+* Animations - Yes
+* It should look like:
+
+  * Cyberpunk
+  * Corporate
+  * College fest
+  * Gaming style
+
+---
+4. HERO SECTION
+
+* Heading text
+* Subheading
+* Background video
+* Countdown timer needed - yes after dates are finalized
+* CTA buttons (Register / Explore / Join)
+
+---
+5. EVENTS / COMPETITIONS
+For EACH event I want:
+
+* Event name
+* Description
+* Rules
+* Team size
+* Fees (if any)
+* Prize pool
+* Stages / rounds
+* Registration link
+
+---
+6. REGISTRATION SYSTEM
+
+* Link takes to the UNSTOP platform
+* Login system is compulsorily needed
+
+---
+7. SPONSORS (Right now no one is finalized but will be finalized in few days)
+
+* Logos to be displayed with there names in bold
+* Want an animation carousel
+
+---
+8. TEAM SECTION
+
+* Cores - Pranshu Sharma (President), Neer Jain (Vice-President), Bhumi Agrawal and Yana Patni(Secretary)
+* Heads - Technical, R&D, Events, social media, PR and Outreach
+* Roles
+* Photos
+
+---
+9. EXTRA FEATURES
+
+* Downloadable rulebook
+* Accommodation section
+* Notifications / announcements
+
+---
+
+10. TECH STACK
+
+* Preferred stack:
+  * HTML/CSS/JS
+  * React + Tailwind
+  * Next.js
+* Hosting preference - your prefrence
+
+STEP 2: Perform your task
+
+After collecting all these answers:
+
+* Summarize everything clearly
+* Ask for confirmation before generating code
+
+---
+
+STEP 3: WEBSITE GENERATION
+
+Once confirmed, generate:
+
+1. Full website structure
+2. Clean modern UI
+3. Responsive design (mobile + desktop)
+4. Smooth animations
+5. Reusable components
+6. Organized folder structure
+
+---
+
+STEP 4: BONUS
+
+Also provide:
+
+* Deployment steps
+* SEO basics
+* Performance tips
+
+---
+
+IMPORTANT RULES:
+
+* Do NOT use Ingenium content
+* Only use user-provided data
+* Make it professional (IIT-level quality)
+* Focus on UI + clarity + usability

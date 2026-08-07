@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0B0C10;
+  --foreground: #ededed;
+  --theme-cyan: #4DB8FF;
+  --theme-cyan-dark: #2A75D3;
+  --theme-purple: #B829EA;
+  --theme-card: #1f2833;
+}
+
+.cyber-attack {
+  --theme-cyan: #ef4444;
+  --theme-cyan-dark: #b91c1c;
+  --theme-purple: #dc2626;
+  --theme-card: #2f1212;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-neon-cyan: var(--theme-cyan);
+  --color-neon-cyan-dark: var(--theme-cyan-dark);
+  --color-electric-purple: var(--theme-purple);
+  --color-card: var(--theme-card);
+  --font-sans: var(--font-inter), sans-serif;
+  --font-display: var(--font-orbitron), sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom Utilities for Neon Effects */
+@utility text-glow-cyan {
+  text-shadow: 0 0 10px rgba(77, 184, 255, 0.7), 0 0 20px rgba(77, 184, 255, 0.5);
+}
+
+@utility text-glow-purple {
+  text-shadow: 0 0 10px rgba(184, 41, 234, 0.7), 0 0 20px rgba(184, 41, 234, 0.5);
+}
+
+@utility box-glow-cyan {
+  box-shadow: 0 0 15px rgba(77, 184, 255, 0.4), inset 0 0 10px rgba(77, 184, 255, 0.2);
+}
+
+@utility box-glow-purple {
+  box-shadow: 0 0 15px rgba(184, 41, 234, 0.4), inset 0 0 10px rgba(184, 41, 234, 0.2);
+}
+
+@utility glass-panel {
+  background: rgba(31, 40, 51, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(77, 184, 255, 0.2);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-\\[marquee_20s_linear_infinite\\] {
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes glare {
+  0% { transform: translateX(-200%) skewX(-15deg); }
+  100% { transform: translateX(300%) skewX(-15deg); }
+}
+
+@utility animate-glare {
+  animation: glare 1.5s ease-in-out infinite;
+}
+
+/* ==========================================
+   CUSTOM SLEEK CYBERPUNK SCROLLBARS
+   ========================================== */
+
+/* WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #02050A;
+  border-left: 1px solid rgba(77, 184, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--theme-cyan), var(--theme-purple));
+  border-radius: 9999px;
+  border: 2px solid #02050A;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffffff, var(--theme-cyan));
+  box-shadow: 0 0 10px var(--theme-cyan);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-cyan) #02050A;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Scrollbar Thin Utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(77, 184, 255, 0.3);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-cyan);
+}

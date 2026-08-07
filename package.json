@@ -1,0 +1,50 @@
+{
+  "name": "ranbhoomi-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.71",
+    "@ai-sdk/react": "^3.0.179",
+    "@react-pdf/renderer": "^4.5.1",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@upstash/redis": "^1.38.0",
+    "ai": "^6.0.177",
+    "bcryptjs": "^3.0.3",
+    "dompurify": "^3.4.10",
+    "framer-motion": "^12.38.0",
+    "helmet": "^8.2.0",
+    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
+    "html5-qrcode": "^2.3.8",
+    "jose": "^6.2.3",
+    "lucide-react": "^1.14.0",
+    "mongo-sanitize": "^1.1.0",
+    "mongoose": "^9.6.1",
+    "next": "16.2.4",
+    "nodemailer": "^8.0.7",
+    "pdfkit": "^0.18.0",
+    "pusher": "^5.3.3",
+    "pusher-js": "^8.5.0",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.1",
+    "resend": "^6.12.4",
+    "three": "^0.184.0",
+    "twilio": "^6.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "tailwindcss": "^4"
+  }
+}
