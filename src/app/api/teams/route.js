@@ -6,7 +6,7 @@ import { checkRateLimit } from "@/lib/rate-limiter";
 import { teamRegisterSchema } from "@/lib/schemas";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import mongoSanitize from "mongo-sanitize";
-import { sendVerificationEmail } from "@/lib/email";
+import { sendVerificationEmail, sendRegistrationAcknowledgementEmail } from "@/lib/email";
 import { signToken, verifyToken } from "@/lib/auth";
 
 export async function GET(req) {
@@ -189,26 +189,30 @@ export async function POST(req) {
       members: data.memberDetails.length,
       amountPaid: amountPaid,
       status: "UNPAID",
-      isEmailVerified: false,
+      isEmailVerified: isSessionOwner,
       emailVerificationToken,
       emailVerificationExpires
     });
 
     await newTeam.save();
 
-    // Send verification email
-    console.log(`[VERIFICATION OTP] Generated OTP for ${leaderEmail}: ${emailVerificationToken}`);
+    // Send verification or acknowledgement email
     try {
-      await sendVerificationEmail(leaderEmail, data.name, emailVerificationToken);
+      if (isSessionOwner) {
+        await sendRegistrationAcknowledgementEmail(leaderEmail, data.name, data.event);
+      } else {
+        console.log(`[VERIFICATION OTP] Generated OTP for ${leaderEmail}: ${emailVerificationToken}`);
+        await sendVerificationEmail(leaderEmail, data.name, emailVerificationToken);
+      }
     } catch (mailErr) {
-      console.error("Failed to send verification email:", mailErr);
+      console.error("Failed to send registration email:", mailErr);
     }
 
-    // Generate JWT token for team session (unverified status)
+    // Generate JWT token for team session (inheriting verified status)
     const token = await signToken({
       email: leaderEmail,
       role: "TEAM",
-      isEmailVerified: false
+      isEmailVerified: isSessionOwner
     });
 
     const response = NextResponse.json({ success: true, team: newTeam }, { status: 201 });

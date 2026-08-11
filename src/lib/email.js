@@ -18,15 +18,10 @@ const cleanEmailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.replace(/
 const cleanEmailPass = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/^["']|["']$/g, "") : "";
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // Use STARTTLS
+  service: "gmail",
   auth: {
     user: cleanEmailUser,
     pass: cleanEmailPass,
-  },
-  tls: {
-    rejectUnauthorized: false,
   },
 });
 
@@ -251,6 +246,27 @@ export const send2FAEmail = async (toEmail, recipientName, code) => {
   return sendMail({
     to: toEmail,
     subject: `SECURITY ALERT: Two-Factor Passcode ${code}`,
+    html
+  });
+};
+
+export const sendRegistrationAcknowledgementEmail = async (toEmail, teamName, eventName) => {
+  const html = `
+    <div style="font-family: monospace; background-color: #050505; color: #ffffff; padding: 30px; border: 1px solid #66fcf1; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #66fcf1; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px;">HQ TRANSMISSION: REGISTRATION RECEIVED</h2>
+      <p style="color: #cccccc;">Congratulations, leader of <strong>${teamName}</strong>!</p>
+      <p style="color: #cccccc;">Your registration for <strong>${eventName}</strong> has been received successfully.</p>
+      <p style="color: #cccccc;">You can now access your dashboard to finalize your payment and secure your slot.</p>
+      <div style="margin: 30px 0; text-align: center;">
+        <a href="${APP_URL}/dashboard" style="background-color: transparent; border: 1px solid #66fcf1; color: #66fcf1; padding: 12px 24px; text-decoration: none; text-transform: uppercase; font-weight: bold; letter-spacing: 2px;">ACCESS DASHBOARD</a>
+      </div>
+      <p style="color: #666666; font-size: 10px; margin-top: 40px;">// END OF TRANSMISSION //</p>
+    </div>
+  `;
+
+  return sendMail({
+    to: toEmail,
+    subject: `CONFIRMATION: Registration Received for ${teamName} (${eventName})`,
     html
   });
 };
