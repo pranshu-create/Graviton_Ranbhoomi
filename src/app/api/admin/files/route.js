@@ -48,8 +48,10 @@ export async function GET(req) {
       }
     }
 
-    // 4. Read file from private-uploads directory
-    const filePath = path.join(process.cwd(), "private-uploads", fileName);
+    // 4. Read file from private-uploads directory (use /tmp on Vercel)
+    const isVercel = process.env.VERCEL === "1" || process.env.NOW_BUILDER === "1";
+    const uploadDir = isVercel ? "/tmp" : path.join(process.cwd(), "private-uploads");
+    const filePath = path.join(uploadDir, fileName);
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ success: false, error: "File not found" }, { status: 404 });
     }

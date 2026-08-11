@@ -44,9 +44,10 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: "Invalid file extension. Allowed: .jpg, .jpeg, .png, .pdf" }, { status: 400 });
     }
 
-    // Save to private-uploads directory
-    const uploadDir = path.join(process.cwd(), "private-uploads");
-    if (!fs.existsSync(uploadDir)) {
+    // Save to private-uploads directory (use /tmp on Vercel)
+    const isVercel = process.env.VERCEL === "1" || process.env.NOW_BUILDER === "1";
+    const uploadDir = isVercel ? "/tmp" : path.join(process.cwd(), "private-uploads");
+    if (!isVercel && !fs.existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
 

@@ -92,9 +92,10 @@ export async function POST(req) {
       }, { status: 403 });
     }
 
-    // Save to private-uploads directory
-    const uploadDir = path.join(process.cwd(), "private-uploads");
-    if (!fs.existsSync(uploadDir)) {
+    // Save to private-uploads directory (use /tmp on Vercel)
+    const isVercel = process.env.VERCEL === "1" || process.env.NOW_BUILDER === "1";
+    const uploadDir = isVercel ? "/tmp" : path.join(process.cwd(), "private-uploads");
+    if (!isVercel && !fs.existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
 
