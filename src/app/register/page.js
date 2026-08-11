@@ -71,7 +71,7 @@ export default function RegisterPage() {
     
     const teamName = formData.get("teamName");
     const institution = formData.get("institution");
-    const password = formData.get("password");
+    const password = formData.get("password") || undefined;
     
     const memberDetails = [];
     
@@ -110,7 +110,7 @@ export default function RegisterPage() {
         window.dispatchEvent(new Event("auth-change"));
         router.push("/dashboard");
       } else {
-        alert("Registration Failed: " + data.error);
+        alert("Registration Failed: " + data.error + (data.details ? "\nDetails: " + data.details : ""));
         setLoading(false);
       }
     } catch (err) {

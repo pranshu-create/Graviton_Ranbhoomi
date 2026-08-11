@@ -13,20 +13,24 @@ export default async function proxy(request) {
     (pathname.startsWith('/api/admin') && pathname !== '/api/admin/login' && pathname !== '/api/admin/setup')
   ) {
     const token = request.cookies.get('admin_token')?.value;
+    console.log(`[Middleware] pathname: ${pathname}, token exists: ${!!token}`);
 
     if (!token) {
       if (pathname.startsWith('/api')) {
         return NextResponse.json({ success: false, error: 'Unauthorized: Admin session required' }, { status: 401 });
       }
+      console.log(`[Middleware] No token, redirecting to /admin-login`);
       return NextResponse.redirect(new URL('/admin-login', request.url));
     }
 
     const decoded = await verifyToken(token);
+    console.log(`[Middleware] decoded token:`, decoded);
     const validRoles = ['SUPER_ADMIN', 'ADMIN', 'VOLUNTEER', 'HOSTEL_AUTHORITY', 'BOYS_HOSTEL_SECURITY', 'GIRLS_HOSTEL_SECURITY', 'HOSTEL_STAFF'];
     if (!decoded || !validRoles.includes(decoded.role)) {
       if (pathname.startsWith('/api')) {
         return NextResponse.json({ success: false, error: 'Unauthorized: Invalid Admin token' }, { status: 401 });
       }
+      console.log(`[Middleware] Token invalid or role invalid, redirecting to /admin-login`);
       return NextResponse.redirect(new URL('/admin-login', request.url));
     }
 

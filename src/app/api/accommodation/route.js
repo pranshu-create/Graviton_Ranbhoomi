@@ -91,7 +91,7 @@ export async function POST(request) {
       });
 
       if (!validation.success) {
-        const errorMsg = validation.error.errors[0]?.message || "Invalid member data format";
+        const errorMsg = validation.error.issues?.[0]?.message || "Invalid member data format";
         return NextResponse.json({ success: false, error: errorMsg }, { status: 400 });
       }
 

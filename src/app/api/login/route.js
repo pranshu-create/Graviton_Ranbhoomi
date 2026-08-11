@@ -26,7 +26,7 @@ export async function POST(req) {
     // 2. Input Schema Validation
     const validation = loginSchema.safeParse(sanitizedBody);
     if (!validation.success) {
-      const errorMsg = validation.error.errors[0]?.message || "Invalid input data";
+      const errorMsg = validation.error.issues?.[0]?.message || "Invalid input data";
       return NextResponse.json({ success: false, error: errorMsg }, { status: 400 });
     }
 

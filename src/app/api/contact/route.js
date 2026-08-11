@@ -26,7 +26,7 @@ export async function POST(req) {
     // 2. Input Validation via Zod Schema
     const validation = contactSchema.safeParse(sanitizedBody);
     if (!validation.success) {
-      const errorMsg = validation.error.errors[0]?.message || "Invalid data transmission structure";
+      const errorMsg = validation.error.issues?.[0]?.message || "Invalid data transmission structure";
       return NextResponse.json({ success: false, error: errorMsg }, { status: 400 });
     }
 

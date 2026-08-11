@@ -4,25 +4,100 @@ import AdminUser from '@/models/AdminUser';
 import Log from '@/models/Log';
 import { verifyPassword, signToken } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limiter';
+import fs from 'fs';
+import path from 'path';
+
+// Helper to write system log to mock DB
+async function writeMockLog(action, adminEmail, details, ip) {
+  try {
+    const dbPath = path.resolve(process.cwd(), 'db_mock.json');
+    let dbData = {};
+    if (fs.existsSync(dbPath)) {
+      try {
+        dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+      } catch (e) {
+        dbData = {};
+      }
+    }
+    if (!dbData.logs) dbData.logs = [];
+    dbData.logs.push({
+      _id: Math.random().toString(36).substring(2, 9),
+      action,
+      adminEmail,
+      details,
+      ipAddress: ip,
+      createdAt: new Date().toISOString()
+    });
+    fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2), 'utf8');
+  } catch (err) {
+    console.error("Failed to write mock log:", err);
+  }
+}
 
 export async function POST(req) {
   try {
-    // Basic IP tracking for Rate Limit (fallback to x-forwarded-for if behind proxy)
+    // Basic IP tracking for Rate Limit
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
-    const rateCheck = await checkRateLimit(ip);
+    let rateCheck = { success: true };
+    if (!global.isDbMocked) {
+      rateCheck = await checkRateLimit(ip);
+    }
     
     if (!rateCheck.success) {
       return NextResponse.json({ success: false, error: 'Too many login attempts. Please try again later.' }, { status: 429 });
     }
 
-    await connectToDatabase();
     const { email, password } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json({ success: false, error: 'Email and password required' }, { status: 400 });
     }
 
-    const admin = await AdminUser.findOne({ email });
+    let admin = null;
+    let isMock = false;
+
+    try {
+      await connectToDatabase();
+      if (global.isDbMocked) {
+        throw new Error("DB is mocked");
+      }
+      admin = await AdminUser.findOne({ email });
+    } catch (dbError) {
+      console.warn("Using local JSON database fallback for Admin login lookup.");
+      isMock = true;
+      const dbPath = path.resolve(process.cwd(), 'db_mock.json');
+      let dbData = {};
+      if (fs.existsSync(dbPath)) {
+        try {
+          dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+        } catch (e) {}
+      }
+      const mockAdmins = dbData.adminusers || [];
+      const matched = mockAdmins.find(u => u.email === email);
+      if (matched) {
+        // Clone object and add a mock .save() method
+        admin = {
+          ...matched,
+          save: async function() {
+            const idx = dbData.adminusers.findIndex(u => u.email === email);
+            if (idx !== -1) {
+              dbData.adminusers[idx] = {
+                _id: this._id,
+                name: this.name,
+                email: this.email,
+                password: this.password,
+                role: this.role,
+                twoFactorEnabled: this.twoFactorEnabled,
+                twoFactorCode: this.twoFactorCode,
+                twoFactorExpires: this.twoFactorExpires
+              };
+              fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2), 'utf8');
+            }
+            return this;
+          }
+        };
+      }
+    }
     
     if (!admin) {
       return NextResponse.json({ success: false, error: 'Invalid credentials' }, { status: 401 });
@@ -31,13 +106,16 @@ export async function POST(req) {
     const isValid = await verifyPassword(password, admin.password);
     
     if (!isValid) {
-      // Optional: log failed attempt
-      await Log.create({
-        action: 'FAILED_LOGIN',
-        adminEmail: email,
-        details: `Failed login attempt from IP: ${ip}`,
-        ipAddress: ip
-      });
+      if (isMock) {
+        await writeMockLog('FAILED_LOGIN', email, `Failed login attempt from IP: ${ip}`, ip);
+      } else {
+        await Log.create({
+          action: 'FAILED_LOGIN',
+          adminEmail: email,
+          details: `Failed login attempt from IP: ${ip}`,
+          ipAddress: ip
+        });
+      }
       return NextResponse.json({ success: false, error: 'Invalid credentials' }, { status: 401 });
     }
 
@@ -58,12 +136,16 @@ export async function POST(req) {
         console.error("Admin 2FA Email sending failed:", err);
       }
 
-      await Log.create({
-        action: 'PENDING_2FA',
-        adminEmail: email,
-        details: 'Admin login pending Two-Factor Verification',
-        ipAddress: ip
-      });
+      if (isMock) {
+        await writeMockLog('PENDING_2FA', email, 'Admin login pending Two-Factor Verification', ip);
+      } else {
+        await Log.create({
+          action: 'PENDING_2FA',
+          adminEmail: email,
+          details: 'Admin login pending Two-Factor Verification',
+          ipAddress: ip
+        });
+      }
 
       return NextResponse.json({ 
         success: true, 
@@ -74,7 +156,7 @@ export async function POST(req) {
 
     // Sign JWT
     const token = await signToken({
-      id: admin._id.toString(),
+      id: admin._id ? admin._id.toString() : 'mock-id',
       email: admin.email,
       role: admin.role,
       name: admin.name
@@ -95,12 +177,16 @@ export async function POST(req) {
       maxAge: 60 * 60 * 24 // 1 day
     });
     
-    await Log.create({
-      action: 'LOGIN',
-      adminEmail: email,
-      details: 'Admin logged in',
-      ipAddress: ip
-    });
+    if (isMock) {
+      await writeMockLog('LOGIN', email, 'Admin logged in', ip);
+    } else {
+      await Log.create({
+        action: 'LOGIN',
+        adminEmail: email,
+        details: 'Admin logged in',
+        ipAddress: ip
+      });
+    }
 
     return response;
   } catch (error) {

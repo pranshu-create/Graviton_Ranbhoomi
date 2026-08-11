@@ -78,7 +78,7 @@ export async function POST(req) {
     // 2. Input Validation via Zod Schema
     const validation = teamRegisterSchema.safeParse(sanitizedBody);
     if (!validation.success) {
-      const errorMsg = validation.error.errors[0]?.message || "Invalid registration data";
+      const errorMsg = validation.error.issues?.[0]?.message || "Invalid registration data";
       return NextResponse.json({ error: errorMsg }, { status: 400 });
     }
 
@@ -94,9 +94,46 @@ export async function POST(req) {
     const leaderEmail = data.memberDetails?.[0]?.email;
     const existingTeam = await Team.findOne({ "memberDetails.0.email": leaderEmail });
 
+    // Verify session using request headers or directly from cookies (since POST /api/teams bypasses proxy path protection)
+    let isSessionOwner = false;
+    const userRole = req.headers.get("x-user-role");
+    const teamEmail = req.headers.get("x-team-email");
+    
+    if (userRole === "TEAM" && teamEmail && teamEmail.toLowerCase() === leaderEmail.toLowerCase()) {
+      isSessionOwner = true;
+    } else {
+      const token = req.cookies.get("team_token")?.value;
+      if (token) {
+        const { verifyToken } = await import("@/lib/auth");
+        const decoded = await verifyToken(token);
+        if (decoded && decoded.role === "TEAM" && decoded.email && decoded.email.toLowerCase() === leaderEmail.toLowerCase()) {
+          isSessionOwner = true;
+        }
+      }
+    }
+
     if (existingTeam) {
-      // User has registered a team before, reuse their password hash
-      data.password = existingTeam.password;
+      if (isSessionOwner) {
+        // Logged-in session owner, reuse their password hash silently
+        data.password = existingTeam.password;
+      } else {
+        // Not logged in or registering as someone else: verify the password if provided
+        if (!data.password) {
+          return NextResponse.json({ error: "This email is already registered. Please log in first." }, { status: 400 });
+        }
+        const bcrypt = await import("bcryptjs");
+        const isPasswordHashed = /^\$2[ayb]\$.{56}$/.test(existingTeam.password);
+        let isValid = false;
+        if (isPasswordHashed) {
+          isValid = await bcrypt.default.compare(data.password, existingTeam.password);
+        } else {
+          isValid = data.password === existingTeam.password;
+        }
+        if (!isValid) {
+          return NextResponse.json({ error: "This email is already registered. Incorrect password." }, { status: 400 });
+        }
+        data.password = existingTeam.password; // reuse password hash
+      }
     } else {
       // For a new registration, password must be provided and must be at least 6 characters
       if (!data.password || data.password.length < 6) {
@@ -111,6 +148,9 @@ export async function POST(req) {
     }
 
     // Generate unique team ID robustly
+    let teamId;
+    let isUnique = false;
+    let attempt = 0;
     const lastTeam = await Team.findOne().sort({ teamId: -1 });
     let nextIdNumber = 1;
     if (lastTeam && lastTeam.teamId) {
@@ -119,7 +159,16 @@ export async function POST(req) {
         nextIdNumber = parseInt(match[0], 10) + 1;
       }
     }
-    const teamId = `T-${String(nextIdNumber).padStart(3, '0')}`;
+
+    while (!isUnique && attempt < 100) {
+      teamId = `T-${String(nextIdNumber + attempt).padStart(3, '0')}`;
+      const duplicate = await Team.findOne({ teamId });
+      if (!duplicate) {
+        isUnique = true;
+      } else {
+        attempt++;
+      }
+    }
 
     // Fetch the event to determine the current registration fee
     const eventDoc = await Event.findOne({ name: new RegExp('^' + data.event.replace(/[^a-zA-Z0-9\s]/g, '') + '$', 'i') });
