@@ -16,13 +16,21 @@ const fromEmail = process.env.RESEND_FROM_EMAIL ? process.env.RESEND_FROM_EMAIL.
 // Nodemailer fallback setup
 const cleanEmailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.replace(/^["']|["']$/g, "") : "";
 const cleanEmailPass = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/^["']|["']$/g, "") : "";
+const cleanEmailHost = process.env.EMAIL_HOST ? process.env.EMAIL_HOST.replace(/^["']|["']$/g, "") : "smtp.gmail.com";
+const cleanEmailPort = process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT.replace(/^["']|["']$/g, ""), 10) : 587;
+const cleanSenderEmail = process.env.SENDER_EMAIL ? process.env.SENDER_EMAIL.replace(/^["']|["']$/g, "") : cleanEmailUser;
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: cleanEmailHost,
+  port: cleanEmailPort,
+  secure: cleanEmailPort === 465,
   auth: {
     user: cleanEmailUser,
     pass: cleanEmailPass,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -65,7 +73,7 @@ async function sendMail({ to, subject, html, attachments = [] }) {
 
   // Fallback to Nodemailer SMTP
   try {
-    const fromAddress = cleanEmailUser ? `"Graviton Command Center" <${cleanEmailUser}>` : `"Ranbhoomi HQ" <onboarding@resend.dev>`;
+    const fromAddress = cleanSenderEmail ? `"Graviton Command Center" <${cleanSenderEmail}>` : `"Ranbhoomi HQ" <onboarding@resend.dev>`;
     const info = await transporter.sendMail({
       from: fromAddress,
       to,
