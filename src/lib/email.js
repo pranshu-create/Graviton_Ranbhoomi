@@ -6,13 +6,16 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 const fromEmail = process.env.RESEND_FROM_EMAIL || `"Ranbhoomi HQ" <onboarding@resend.dev>`;
 
 // Nodemailer fallback setup
+const cleanEmailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.replace(/^["']|["']$/g, "") : "";
+const cleanEmailPass = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/^["']|["']$/g, "") : "";
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false, // Use STARTTLS
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: cleanEmailUser,
+    pass: cleanEmailPass,
   },
   tls: {
     rejectUnauthorized: false,
@@ -59,7 +62,7 @@ async function sendMail({ to, subject, html, attachments = [] }) {
 
   // Fallback to Nodemailer SMTP
   try {
-    const fromAddress = process.env.EMAIL_USER ? `"Graviton Command Center" <${process.env.EMAIL_USER}>` : `"Ranbhoomi HQ" <onboarding@resend.dev>`;
+    const fromAddress = cleanEmailUser ? `"Graviton Command Center" <${cleanEmailUser}>` : `"Ranbhoomi HQ" <onboarding@resend.dev>`;
     const info = await transporter.sendMail({
       from: fromAddress,
       to,
