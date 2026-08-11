@@ -196,6 +196,7 @@ export async function POST(req) {
     await newTeam.save();
 
     // Send verification email
+    console.log(`[VERIFICATION OTP] Generated OTP for ${leaderEmail}: ${emailVerificationToken}`);
     try {
       const { sendVerificationEmail } = await import("@/lib/email");
       await sendVerificationEmail(leaderEmail, data.name, emailVerificationToken);

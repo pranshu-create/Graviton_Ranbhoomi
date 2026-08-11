@@ -39,6 +39,7 @@ export async function POST(req) {
     }
 
     // Dispatch email
+    console.log(`[VERIFICATION OTP] Generated resent OTP for ${email}: ${newOTP}`);
     const mailSent = await sendVerificationEmail(email.toLowerCase(), firstTeam.name, newOTP);
     if (!mailSent) {
       return NextResponse.json({ success: false, error: "Failed to deliver email. Please try again later." }, { status: 500 });
