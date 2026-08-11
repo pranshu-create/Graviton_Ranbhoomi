@@ -6,6 +6,8 @@ import { checkRateLimit } from "@/lib/rate-limiter";
 import { teamRegisterSchema } from "@/lib/schemas";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import mongoSanitize from "mongo-sanitize";
+import { sendVerificationEmail } from "@/lib/email";
+import { signToken, verifyToken } from "@/lib/auth";
 
 export async function GET(req) {
   try {
@@ -104,7 +106,6 @@ export async function POST(req) {
     } else {
       const token = req.cookies.get("team_token")?.value;
       if (token) {
-        const { verifyToken } = await import("@/lib/auth");
         const decoded = await verifyToken(token);
         if (decoded && decoded.role === "TEAM" && decoded.email && decoded.email.toLowerCase() === leaderEmail.toLowerCase()) {
           isSessionOwner = true;
@@ -198,14 +199,12 @@ export async function POST(req) {
     // Send verification email
     console.log(`[VERIFICATION OTP] Generated OTP for ${leaderEmail}: ${emailVerificationToken}`);
     try {
-      const { sendVerificationEmail } = await import("@/lib/email");
       await sendVerificationEmail(leaderEmail, data.name, emailVerificationToken);
     } catch (mailErr) {
       console.error("Failed to send verification email:", mailErr);
     }
 
     // Generate JWT token for team session (unverified status)
-    const { signToken } = await import("@/lib/auth");
     const token = await signToken({
       email: leaderEmail,
       role: "TEAM",
