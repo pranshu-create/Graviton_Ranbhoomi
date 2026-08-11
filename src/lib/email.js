@@ -2,8 +2,16 @@ import nodemailer from "nodemailer";
 import { Resend } from "resend";
 
 // Resend Setup
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const fromEmail = process.env.RESEND_FROM_EMAIL || `"Ranbhoomi HQ" <onboarding@resend.dev>`;
+let resend = null;
+try {
+  const cleanResendKey = process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.replace(/^["']|["']$/g, "") : "";
+  if (cleanResendKey) {
+    resend = new Resend(cleanResendKey);
+  }
+} catch (e) {
+  console.error("Failed to initialize Resend:", e);
+}
+const fromEmail = process.env.RESEND_FROM_EMAIL ? process.env.RESEND_FROM_EMAIL.replace(/^["']|["']$/g, "") : `"Ranbhoomi HQ" <onboarding@resend.dev>`;
 
 // Nodemailer fallback setup
 const cleanEmailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.replace(/^["']|["']$/g, "") : "";
