@@ -466,7 +466,7 @@ export default function SuperAdminDashboard() {
         setTeams(teams.map(t => (t.teamId === team.teamId || t.id === team.id) ? { ...t, status: "VERIFIED" } : t));
         alert(`[SYSTEM ACTION]: Payment Verified.\n\nAutomated Confirmation Email successfully dispatched.`);
       } else {
-        alert("Verification failed");
+        alert("Verification failed: " + (data.error || "") + (data.details ? ` (${data.details})` : ""));
       }
     } catch (err) {
       alert("Error connecting to backend");
@@ -485,7 +485,7 @@ export default function SuperAdminDashboard() {
       if (data.success) {
         alert(`[SYSTEM ACTION]: Receipt Resent.\n\nAutomated Confirmation Email successfully dispatched to leader.`);
       } else {
-        alert("Failed to resend receipt: " + data.error);
+        alert("Failed to resend receipt: " + data.error + (data.details ? ` (${data.details})` : ""));
       }
     } catch (err) {
       alert("Error connecting to backend");
