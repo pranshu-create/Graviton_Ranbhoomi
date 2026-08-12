@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Contact from "@/models/Contact";
-import nodemailer from "nodemailer";
 import { checkRateLimit } from "@/lib/rate-limiter";
+import { transporter, cleanSenderEmail } from "@/lib/email";
 import { contactSchema } from "@/lib/schemas";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import mongoSanitize from "mongo-sanitize";
@@ -49,21 +49,10 @@ export async function POST(req) {
 
 
     // Send styled Email to Graviton Team
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    if (cleanSenderEmail && transporter) {
       try {
-        const transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false,
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-          },
-          tls: { rejectUnauthorized: false },
-        });
-
         const mailOptions = {
-          from: `"RANBHOOMI Contact Terminal" <${process.env.EMAIL_USER}>`,
+          from: `"RANBHOOMI Contact Terminal" <${cleanSenderEmail}>`,
           to: "gravitonroboticsidr@gmail.com",
           replyTo: email,
           subject: `[INQUIRY] ${subject} - ${name}`,

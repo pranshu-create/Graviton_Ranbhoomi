@@ -18,9 +18,9 @@ const cleanEmailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.replace(/
 const cleanEmailPass = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/^["']|["']$/g, "") : "";
 const cleanEmailHost = process.env.EMAIL_HOST ? process.env.EMAIL_HOST.replace(/^["']|["']$/g, "") : "smtp.gmail.com";
 const cleanEmailPort = process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT.replace(/^["']|["']$/g, ""), 10) : 587;
-const cleanSenderEmail = process.env.SENDER_EMAIL ? process.env.SENDER_EMAIL.replace(/^["']|["']$/g, "") : cleanEmailUser;
+export const cleanSenderEmail = process.env.SENDER_EMAIL ? process.env.SENDER_EMAIL.replace(/^["']|["']$/g, "") : cleanEmailUser;
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   host: cleanEmailHost,
   port: cleanEmailPort,
   secure: cleanEmailPort === 465,

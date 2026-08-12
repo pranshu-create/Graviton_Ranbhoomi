@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Team from '@/models/Team';
-import nodemailer from 'nodemailer';
+import { transporter, cleanSenderEmail } from '@/lib/email';
 
 export async function POST(req) {
   try {
@@ -48,16 +48,9 @@ export async function POST(req) {
       return NextResponse.json({ success: true, sent: 0, message: "No operatives found matching criteria." });
     }
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      tls: { rejectUnauthorized: false },
-    });
+    if (!cleanSenderEmail || !transporter) {
+      return NextResponse.json({ success: false, error: 'Email configuration is missing or invalid' }, { status: 500 });
+    }
 
     const htmlContent = `
       <div style="font-family: 'Courier New', Courier, monospace; background-color: #02050A; color: #ffffff; padding: 0; margin: 0; width: 100%; max-width: 600px; margin: auto; border: 1px solid #66FCF1;">
@@ -82,7 +75,7 @@ ${message}
     for (const email of emails) {
       try {
         await transporter.sendMail({
-          from: `"RANBHOOMI HQ" <${process.env.EMAIL_USER}>`,
+          from: `"RANBHOOMI HQ" <${cleanSenderEmail}>`,
           to: email,
           subject: subject,
           html: htmlContent,

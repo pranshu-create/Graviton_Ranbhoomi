@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Team from '@/models/Team';
-import nodemailer from 'nodemailer';
+import { transporter, cleanSenderEmail } from '@/lib/email';
 
 export async function POST(req) {
   try {
@@ -19,13 +19,9 @@ export async function POST(req) {
       return NextResponse.json({ success: true, sent: 0, message: "All verified teams are marked present." });
     }
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    if (!cleanSenderEmail || !transporter) {
+      return NextResponse.json({ success: false, error: 'Email configuration is missing or invalid' }, { status: 500 });
+    }
 
     let sentCount = 0;
     for (const team of missingTeams) {
@@ -53,7 +49,7 @@ export async function POST(req) {
 
       try {
         await transporter.sendMail({
-          from: `"RANBHOOMI HQ" <${process.env.EMAIL_USER}>`,
+          from: `"RANBHOOMI HQ" <${cleanSenderEmail}>`,
           to: leaderEmail,
           subject: "URGENT: Missing In Action - RANBHOOMI 3.0",
           html: htmlContent,

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Team from "@/models/Team";
-import nodemailer from "nodemailer";
 import PDFDocument from "pdfkit";
+import { transporter, cleanSenderEmail } from "@/lib/email";
 
 import path from "path";
 import fs from "fs";
@@ -138,18 +138,7 @@ export async function POST(req) {
     // Send email
     const leaderEmail = team.memberDetails.find(m => m.role === "Leader")?.email;
 
-    if (leaderEmail && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-        tls: { rejectUnauthorized: false },
-      });
-
+    if (leaderEmail && cleanSenderEmail && transporter) {
       let mailOptions;
 
       if (action === "VERIFY" || action === "RESEND_RECEIPT") {
@@ -175,7 +164,7 @@ export async function POST(req) {
         }
 
         mailOptions = {
-          from: `"RANBHOOMI HQ" <${process.env.EMAIL_USER}>`,
+          from: `"RANBHOOMI HQ" <${cleanSenderEmail}>`,
           to: leaderEmail,
           subject: "Registration Verified - RANBHOOMI 3.0",
           attachments: attachment ? [attachment] : [],
@@ -224,7 +213,7 @@ export async function POST(req) {
         };
       } else if (action === "REJECT") {
         mailOptions = {
-          from: `"RANBHOOMI HQ" <${process.env.EMAIL_USER}>`,
+          from: `"RANBHOOMI HQ" <${cleanSenderEmail}>`,
           to: leaderEmail,
           subject: "Payment Rejected - RANBHOOMI 3.0",
           html: `
@@ -242,8 +231,8 @@ export async function POST(req) {
       }
 
       await transporter.sendMail(mailOptions);
-    } else if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.warn("Email credentials missing in .env.local. Email not sent.");
+    } else if (!cleanSenderEmail || !transporter) {
+      console.warn("Email credentials missing. Email not sent.");
     }
 
     return NextResponse.json({ success: true, team });
