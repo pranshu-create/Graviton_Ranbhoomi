@@ -1,8 +1,34 @@
 import { NextResponse } from 'next/server';
 import { verifyToken } from './lib/auth';
 
+// In-memory rate limiting map for Edge Middleware fallback
+const rateLimitMap = new Map();
+
 export default async function proxy(request) {
   const { pathname } = request.nextUrl;
+  const ip = request.ip || request.headers.get('x-forwarded-for') || '127.0.0.1';
+
+  // Apply strict rate limiting on registration endpoints to prevent crash
+  if (pathname === '/api/teams' && request.method === 'POST') {
+    const windowMs = 60 * 1000;
+    const maxRequests = 5;
+
+    const now = Date.now();
+    const windowStart = now - windowMs;
+
+    const requestLog = rateLimitMap.get(ip) || [];
+    const requestsInWindow = requestLog.filter(time => time > windowStart);
+
+    if (requestsInWindow.length >= maxRequests) {
+      return NextResponse.json(
+        { error: 'High traffic detected. Registration queue is full. Please try again in a minute.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
+    requestsInWindow.push(now);
+    rateLimitMap.set(ip, requestsInWindow);
+  }
 
   // 1. Admin Routing Protection
   if (

@@ -59,6 +59,14 @@ export default function RegisterPage() {
     
     // Extract data from form (simplified for prototype)
     const formData = new FormData(e.target);
+    
+    // Honeypot check for bots
+    if (formData.get("honeypot_field")) {
+      // Silently fail for bots
+      setLoading(false);
+      return;
+    }
+
     const eventName = formData.get("event");
 
     if (frozenEvents.some(fe => fe.toUpperCase() === eventName.toUpperCase())) {
@@ -108,7 +116,7 @@ export default function RegisterPage() {
         localStorage.setItem("userEmail", formData.get("m1_email")); // Save Leader Email
         localStorage.setItem("isLoggedIn", "true");
         window.dispatchEvent(new Event("auth-change"));
-        router.push("/dashboard");
+        router.push("/thank-you");
       } else {
         alert("Registration Failed: " + data.error + (data.details ? "\nDetails: " + data.details : ""));
         setLoading(false);
@@ -177,6 +185,8 @@ export default function RegisterPage() {
               </div>
             ) : (
               <form onSubmit={handleRegister} className="space-y-8">
+                {/* Honeypot field for bot protection */}
+                <input type="text" name="honeypot_field" className="hidden" style={{ display: 'none' }} tabIndex="-1" autoComplete="off" />
                 
                 {/* Unit Info */}
                 <div className="space-y-4">

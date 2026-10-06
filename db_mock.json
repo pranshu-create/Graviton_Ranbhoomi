@@ -1,0 +1,522 @@
+{
+  "adminusers": [
+    {
+      "_id": "mock-super-admin-id",
+      "name": "Pranshu",
+      "email": "pranshu@graviton.in",
+      "password": "$2b$10$8rGxwoJNhE5.7kIghBCl1uGwtSpQoBYMaTk29OtxSJanIm48yc2ja",
+      "role": "SUPER_ADMIN",
+      "twoFactorEnabled": false
+    },
+    {
+      "_id": "mock-hostel-authority-id",
+      "name": "Hostel Authority",
+      "email": "hostelauthority@graviton.in",
+      "password": "$2b$10$8rGxwoJNhE5.7kIghBCl1udm3UfAMUn1h0ZsdYIvtvhSNB4mrp2EG",
+      "role": "HOSTEL_AUTHORITY",
+      "twoFactorEnabled": false
+    },
+    {
+      "_id": "mock-boys-hostel-security-id",
+      "name": "Boys Hostel Security",
+      "email": "boyshostelsecurity@graviton.in",
+      "password": "$2b$10$8rGxwoJNhE5.7kIghBCl1uNHQIpV3XIhlyCdnPPZQReWJajTNg3oq",
+      "role": "BOYS_HOSTEL_SECURITY",
+      "twoFactorEnabled": false
+    },
+    {
+      "_id": "mock-girls-hostel-security-id",
+      "name": "Girls Hostel Security",
+      "email": "girlshostelsecurity@graviton.in",
+      "password": "$2b$10$8rGxwoJNhE5.7kIghBCl1up8Rk65rrtn.vpNPVyat91jQMCl0PcVa",
+      "role": "GIRLS_HOSTEL_SECURITY",
+      "twoFactorEnabled": false
+    }
+  ],
+  "logs": [
+    {
+      "_id": "90tlury",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:25:30.417Z"
+    },
+    {
+      "_id": "8rzaq33",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:25:34.899Z"
+    },
+    {
+      "_id": "tu5eppb",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:25:35.210Z"
+    },
+    {
+      "_id": "ahhxbpc",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:25:49.020Z"
+    },
+    {
+      "_id": "0823emh",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:25:59.921Z"
+    },
+    {
+      "_id": "j7hlace",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:46:58.067Z"
+    },
+    {
+      "_id": "m9mbhsn",
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "createdAt": "2026-08-09T09:47:01.046Z"
+    },
+    {
+      "action": "LOGIN",
+      "adminEmail": "pranshu@graviton.in",
+      "details": "Admin logged in",
+      "ipAddress": "::1",
+      "_id": "6a784cf7b46c1109486b5a73",
+      "createdAt": "2026-08-09T09:48:39.500Z",
+      "updatedAt": "2026-08-09T09:48:39.500Z",
+      "__v": 0
+    }
+  ],
+  "systemconfigs": [
+    {
+      "configId": "global",
+      "isLockdown": false,
+      "isMaintenanceMode": false,
+      "vaultPassword": "GRAVITON_2026",
+      "globalMessage": "",
+      "frozenEvents": [],
+      "commsMessages": [],
+      "mapNodes": [
+        {
+          "id": "arena",
+          "label": "MAIN ARENA",
+          "x": "50%",
+          "y": "40%",
+          "status": "ONLINE",
+          "desc": "Robo Wars & Heavy Combat Zone",
+          "color": "neon-cyan"
+        },
+        {
+          "id": "arena2",
+          "label": "SECONDARY ARENA",
+          "x": "80%",
+          "y": "20%",
+          "status": "STANDBY",
+          "desc": "Line Follower & Maze",
+          "color": "red-500"
+        },
+        {
+          "id": "track",
+          "label": "RACE TRACK",
+          "x": "25%",
+          "y": "60%",
+          "status": "ONLINE",
+          "desc": "High-Speed Robo Race Course",
+          "color": "electric-purple"
+        },
+        {
+          "id": "soccer",
+          "label": "SOCCER FIELD",
+          "x": "75%",
+          "y": "55%",
+          "status": "STANDBY",
+          "desc": "Robo Soccer Tournament Grounds",
+          "color": "blue-500"
+        },
+        {
+          "id": "hq",
+          "label": "REGISTRATION HQ",
+          "x": "50%",
+          "y": "80%",
+          "status": "ACTIVE",
+          "desc": "Check-in and Technical Support",
+          "color": "green-500"
+        },
+        {
+          "id": "vault",
+          "label": "RESOURCE VAULT",
+          "x": "20%",
+          "y": "30%",
+          "status": "RESTRICTED",
+          "desc": "Component Store & Power Station",
+          "color": "yellow-500"
+        }
+      ],
+      "godModeEvent": {
+        "type": "MAINTENANCE",
+        "payload": {},
+        "timestamp": 1786269340388
+      },
+      "brackets": {
+        "Robo Soccer": {
+          "pdfUrl": "",
+          "matches": []
+        },
+        "Robo Sumo": {
+          "pdfUrl": "",
+          "matches": []
+        },
+        "Robo Race": {
+          "pdfUrl": ""
+        },
+        "Line Follower": {
+          "pdfUrl": ""
+        }
+      },
+      "showRaceLeaderboard": false,
+      "schedule": {
+        "day1": [
+          {
+            "time": "08:30 AM - 10:00 AM",
+            "phase": "PHASE-01",
+            "title": "REGISTRATION & GATEWAY CLEARANCE",
+            "desc": "Check-in, QR clearance, technical weight inspection, and safety sign-offs.",
+            "location": "Registration HQ",
+            "color": "green-500"
+          },
+          {
+            "time": "10:00 AM - 11:00 AM",
+            "phase": "PHASE-02",
+            "title": "ARENA INITIATION: OPENING CEREMONY",
+            "desc": "Grand commencement protocol, official address, and trophy showcase.",
+            "location": "Main Arena Stage",
+            "color": "blue-500"
+          },
+          {
+            "time": "11:00 AM - 01:30 PM",
+            "phase": "PHASE-03",
+            "title": "ROBO SOCCER PRELIMINARIES // BATCH A",
+            "desc": "Head-to-head group matches kick off.",
+            "location": "Soccer Field",
+            "color": "cyan-500"
+          },
+          {
+            "time": "01:30 PM - 02:30 PM",
+            "phase": "PHASE-04",
+            "title": "HQ MID-DAY MAINTENANCE // REFUEL",
+            "desc": "Technical diagnostic checks, lithium battery charging, and lunch.",
+            "location": "Dining Area",
+            "color": "yellow-500"
+          },
+          {
+            "time": "02:30 PM - 04:30 PM",
+            "phase": "PHASE-05",
+            "title": "ROBO RACE TELEMETRY // SPEED TRIALS",
+            "desc": "Autonomous/RC high-speed speed runs, Attempts 1 & 2.",
+            "location": "Speedway Track",
+            "color": "purple-500"
+          },
+          {
+            "time": "04:30 PM - 06:30 PM",
+            "phase": "PHASE-06",
+            "title": "ROBO SUMO COMBAT // HEAVYWEIGHT 1V1",
+            "desc": "Push-out torque matches.",
+            "location": "Combat Ring",
+            "color": "red-500"
+          },
+          {
+            "time": "06:30 PM - 08:30 PM",
+            "phase": "PHASE-07",
+            "title": "MAINFRAME CYBER SECURITY HACKATHON",
+            "desc": "CTF challenges open.",
+            "location": "Tech Lab",
+            "color": "indigo-500"
+          }
+        ],
+        "day2": [
+          {
+            "time": "09:00 AM - 10:30 AM",
+            "phase": "PHASE-08",
+            "title": "LINE FOLLOWER TRIALS // ACCURACY RUNS",
+            "desc": "Calibration runs and autonomous tracking attempts.",
+            "location": "Secondary Track",
+            "color": "green-500"
+          },
+          {
+            "time": "10:30 AM - 01:00 PM",
+            "phase": "PHASE-09",
+            "title": "ROBO SOCCER & SUMO PLAYOFFS",
+            "desc": "Quarter & Semi-final brackets advance.",
+            "location": "Soccer & Combat Rings",
+            "color": "cyan-500"
+          },
+          {
+            "time": "01:00 PM - 02:00 PM",
+            "phase": "PHASE-10",
+            "title": "HQ LUNCH INTERVAL & CALIBRATION",
+            "desc": "System checkouts and battery swaps.",
+            "location": "HQ Lounge",
+            "color": "yellow-500"
+          },
+          {
+            "time": "02:00 PM - 04:00 PM",
+            "phase": "PHASE-11",
+            "title": "FINALS PROPAGATION: CHAMPIONSHIPS",
+            "desc": "Grand finals of all combat and speed events.",
+            "location": "Main Arena",
+            "color": "purple-500"
+          },
+          {
+            "time": "04:00 PM - 05:00 PM",
+            "phase": "PHASE-12",
+            "title": "MAINFRAME HACKATHON FINAL RESOLUTION",
+            "desc": "CTF submissions close and results frozen.",
+            "location": "Tech Lab",
+            "color": "indigo-500"
+          },
+          {
+            "time": "05:00 PM - 06:30 PM",
+            "phase": "PHASE-13",
+            "title": "AWARDS PROPAGATION & CLOSING CEREMONY",
+            "desc": "Distribution of ₹85,000+ bounty pool, trophy distribution, and closing remarks.",
+            "location": "Main Arena Stage",
+            "color": "red-500"
+          }
+        ]
+      },
+      "_id": "6a784cf8b46c1109486b5a74",
+      "__v": 0
+    }
+  ],
+  "arenastatuses": [
+    {
+      "eventId": "robo-race",
+      "status": "RED",
+      "checklist": [
+        {
+          "item": "Power & Electronics Setup",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a76"
+        },
+        {
+          "item": "Safety Barriers Secured",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a77"
+        },
+        {
+          "item": "Scoring System Online",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a78"
+        },
+        {
+          "item": "Judges Panel Ready",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a79"
+        },
+        {
+          "item": "Emergency Protocols Verified",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a7a"
+        }
+      ],
+      "_id": "6a784cf9b46c1109486b5a75",
+      "createdAt": "2026-08-09T09:48:41.367Z",
+      "updatedAt": "2026-08-09T09:48:41.367Z",
+      "__v": 0
+    },
+    {
+      "eventId": "robo-soccer",
+      "status": "RED",
+      "checklist": [
+        {
+          "item": "Power & Electronics Setup",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a7c"
+        },
+        {
+          "item": "Safety Barriers Secured",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a7d"
+        },
+        {
+          "item": "Scoring System Online",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a7e"
+        },
+        {
+          "item": "Judges Panel Ready",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a7f"
+        },
+        {
+          "item": "Emergency Protocols Verified",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a80"
+        }
+      ],
+      "_id": "6a784cf9b46c1109486b5a7b",
+      "createdAt": "2026-08-09T09:48:41.376Z",
+      "updatedAt": "2026-08-09T09:48:41.376Z",
+      "__v": 0
+    },
+    {
+      "eventId": "line-follower",
+      "status": "RED",
+      "checklist": [
+        {
+          "item": "Power & Electronics Setup",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a82"
+        },
+        {
+          "item": "Safety Barriers Secured",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a83"
+        },
+        {
+          "item": "Scoring System Online",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a84"
+        },
+        {
+          "item": "Judges Panel Ready",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a85"
+        },
+        {
+          "item": "Emergency Protocols Verified",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a86"
+        }
+      ],
+      "_id": "6a784cf9b46c1109486b5a81",
+      "createdAt": "2026-08-09T09:48:41.383Z",
+      "updatedAt": "2026-08-09T09:48:41.383Z",
+      "__v": 0
+    },
+    {
+      "eventId": "robo-sumo",
+      "status": "RED",
+      "checklist": [
+        {
+          "item": "Power & Electronics Setup",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a88"
+        },
+        {
+          "item": "Safety Barriers Secured",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a89"
+        },
+        {
+          "item": "Scoring System Online",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a8a"
+        },
+        {
+          "item": "Judges Panel Ready",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a8b"
+        },
+        {
+          "item": "Emergency Protocols Verified",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a8c"
+        }
+      ],
+      "_id": "6a784cf9b46c1109486b5a87",
+      "createdAt": "2026-08-09T09:48:41.389Z",
+      "updatedAt": "2026-08-09T09:48:41.389Z",
+      "__v": 0
+    },
+    {
+      "eventId": "hackathon",
+      "status": "RED",
+      "checklist": [
+        {
+          "item": "Power & Electronics Setup",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a8e"
+        },
+        {
+          "item": "Safety Barriers Secured",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a8f"
+        },
+        {
+          "item": "Scoring System Online",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a90"
+        },
+        {
+          "item": "Judges Panel Ready",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a91"
+        },
+        {
+          "item": "Emergency Protocols Verified",
+          "isReady": false,
+          "_id": "6a784cf9b46c1109486b5a92"
+        }
+      ],
+      "_id": "6a784cf9b46c1109486b5a8d",
+      "createdAt": "2026-08-09T09:48:41.395Z",
+      "updatedAt": "2026-08-09T09:48:41.395Z",
+      "__v": 0
+    }
+  ],
+  "teams": [
+    {
+      "teamId": "T-001",
+      "name": "TURING ROBOTICS",
+      "event": "ROBO SOCCER",
+      "institution": "NMIMS",
+      "password": "$2b$10$9D5LuykA8NGlG5dCr4mUAO2Y1ZUhEDpCkOPfRz8gq5XWNYRz6ksU2",
+      "members": 1,
+      "status": "UNPAID",
+      "amountPaid": 0,
+      "screenshot": null,
+      "screenshotHash": null,
+      "receiptNumber": null,
+      "utr": null,
+      "isPresent": false,
+      "hasHackedMainframe": false,
+      "hackedAt": null,
+      "isEmailVerified": false,
+      "emailVerificationToken": "835151",
+      "emailVerificationExpires": "2026-08-10T09:49:34.860Z",
+      "passwordResetToken": null,
+      "passwordResetExpires": null,
+      "twoFactorEnabled": false,
+      "twoFactorCode": null,
+      "twoFactorExpires": null,
+      "memberDetails": [
+        {
+          "role": "Leader",
+          "name": "Pranshu Sharma",
+          "email": "spranshu671@gmail.com",
+          "phone": "07693091309",
+          "_id": "6a784d2eb46c1109486b5adf"
+        }
+      ],
+      "_id": "6a784d2eb46c1109486b5ade",
+      "date": "2026-08-09T09:49:34.861Z",
+      "runs": [],
+      "__v": 0
+    }
+  ]
+}

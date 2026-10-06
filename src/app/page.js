@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TimelineSection from "@/components/TimelineSection";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef } from "react";
 
@@ -53,7 +54,7 @@ export default function Home() {
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 className="w-full h-full"
               >
-                <img src="/Raw.png" alt="Raw Logo" className="w-full h-full object-contain mix-blend-screen" />
+                <Image src="/Raw.png" alt="Raw Logo" width={800} height={800} priority className="w-full h-full object-contain mix-blend-screen" />
               </motion.div>
             </motion.div>
 

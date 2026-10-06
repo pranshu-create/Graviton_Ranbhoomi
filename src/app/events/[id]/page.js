@@ -204,15 +204,6 @@ export default async function EventDetails({ params }) {
                       </a>
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-[13px] text-gray-300 mt-1">
-                    <span className="font-bold text-white">Neer Jain</span>
-                    <span className={`text-[10px] italic flex items-center ${themeColorText}`}>
-                      Vice President 
-                      <a href="mailto:neer14jain@gmail.com" className="hover:text-white transition-colors">
-                        <Mail className="w-3 h-3 ml-1" />
-                      </a>
-                    </span>
-                  </div>
                 </div>
                 
                 <div className="pt-3 border-t border-white/5">

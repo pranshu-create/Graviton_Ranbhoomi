@@ -11,6 +11,8 @@ import GodModeListener from "@/components/GodModeListener";
 import BottomAlert from "@/components/BottomAlert";
 import HackMinigameListener from "@/components/HackMinigameListener";
 import IntroCinematic from "@/components/IntroCinematic";
+import CookieBanner from "@/components/CookieBanner";
+import TokenInitListener from "@/components/TokenInitListener";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -24,7 +26,31 @@ const orbitron = Orbitron({
 
 export const metadata = {
   title: "RANBHOOMI 2026-27 | Graviton Robotics",
-  description: "The ultimate technical robotics fest by Graviton Robotics.",
+  description: "The ultimate technical robotics fest by Graviton Robotics. Join the battle of metal and minds.",
+  keywords: ["Robotics", "Fest", "Graviton", "RANBHOOMI", "Tech Fest", "Robo Soccer", "Hackathon"],
+  authors: [{ name: "Graviton Robotics" }],
+  openGraph: {
+    title: "RANBHOOMI 2026-27 | Graviton Robotics",
+    description: "The ultimate technical robotics fest by Graviton Robotics.",
+    url: "https://ranbhoomi.tech",
+    siteName: "RANBHOOMI 2.0",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "RANBHOOMI 2.0 Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RANBHOOMI 2026-27",
+    description: "The ultimate technical robotics fest by Graviton Robotics.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -45,7 +71,9 @@ export default function RootLayout({ children }) {
         <SuperAdminLink />
         <BottomAlert />
         <HackMinigameListener />
+        <TokenInitListener />
         {children}
+        <CookieBanner />
       </body>
     </html>
   );

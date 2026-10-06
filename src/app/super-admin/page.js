@@ -3348,7 +3348,7 @@ export default function SuperAdminDashboard() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {sponsorsList.map(s => (
                   <div key={s._id} className="bg-white/5 p-4 border border-white/10 flex flex-col items-center">
-                    <img src={s.logoUrl} className="w-16 h-16 object-contain mb-2" />
+                    <img src={s.logoUrl} alt="Sponsor Logo" className="w-16 h-16 object-contain mb-2" />
                     <p className="font-bold text-center text-xs text-white">{s.name}</p>
                     <span className="text-[10px] text-pink-400">{s.tier}</span>
                     <span className="text-[10px] text-green-400 mt-1 font-bold">₹{(s.amountInvested || 0).toLocaleString()}</span>

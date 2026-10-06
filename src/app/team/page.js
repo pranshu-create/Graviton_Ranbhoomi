@@ -31,13 +31,9 @@ export default function TeamPage() {
             </h2>
             <div className="w-full h-px bg-neon-cyan/30 ml-6"></div>
           </div>
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { name: "Pranshu Sharma", role: "President" },
-              { name: "Neer Jain", role: "Vice-President" },
-              { name: "Bhumi Agrawal", role: "Secretary" },
-              { name: "Yana Patni", role: "Secretary" }
+              { name: "Pranshu Sharma", role: "President" }
             ].map((member, i) => (
               <motion.div 
                 key={i}

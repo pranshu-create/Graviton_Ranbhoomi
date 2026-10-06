@@ -64,7 +64,17 @@ export async function POST(req) {
       return NextResponse.json({ error: "Too many registration attempts. Please wait 1 minute." }, { status: 429 });
     }
 
+    // DDoS Guard Token Check
+    const guardToken = req.cookies.get("ddos_guard_token")?.value;
+    if (!guardToken) {
+      return NextResponse.json({ error: "Missing system guard token. Please reload the page." }, { status: 403 });
+    }
     await connectToDatabase();
+    const { default: VisitorToken } = await import("@/models/VisitorToken");
+    const validToken = await VisitorToken.findOne({ token: guardToken, ip });
+    if (!validToken) {
+      return NextResponse.json({ error: "Invalid system guard token. Please reload the page." }, { status: 403 });
+    }
     
     // Check lockdown status
     const { default: SystemConfig } = await import("@/models/SystemConfig");
