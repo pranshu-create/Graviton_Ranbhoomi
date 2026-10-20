@@ -32,6 +32,11 @@ async function connectToDatabase() {
     return cached.conn;
   }
 
+  // If connection dropped on warm serverless container, reset promise to reconnect cleanly
+  if (mongoose.connection.readyState === 0) {
+    cached.promise = null;
+  }
+
   if (global.isDbMocked && process.env.NODE_ENV !== 'production') {
     return mongoose;
   }
@@ -39,7 +44,7 @@ async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      serverSelectionTimeoutMS: process.env.NODE_ENV === 'production' ? 10000 : 1500,
+      serverSelectionTimeoutMS: process.env.NODE_ENV === 'production' ? 7000 : 1500,
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
@@ -55,9 +60,9 @@ async function connectToDatabase() {
   }
   
   try {
-    const timeoutDuration = process.env.NODE_ENV === 'production' ? 12000 : 1600;
+    const timeoutDuration = process.env.NODE_ENV === 'production' ? 8000 : 1600;
     const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error("Connection timeout")), timeoutDuration)
+      setTimeout(() => reject(new Error("Connection timeout. Please verify MongoDB Atlas Network Access allows 0.0.0.0/0.")), timeoutDuration)
     );
     cached.conn = await Promise.race([cached.promise, timeoutPromise]);
     global.isDbMocked = false;

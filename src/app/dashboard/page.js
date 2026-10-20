@@ -112,6 +112,7 @@ export default function DashboardPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [globalMessage, setGlobalMessage] = useState("");
+  const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
   const [showAcceptanceLetter, setShowAcceptanceLetter] = useState(false);
   const [acceptanceTeam, setAcceptanceTeam] = useState(null);
   
@@ -208,6 +209,7 @@ export default function DashboardPage() {
       if (config.globalMessage !== undefined) setGlobalMessage(config.globalMessage);
       if (config.mapNodes) setMapNodes(config.mapNodes);
       if (config.showRaceLeaderboard !== undefined) setShowRaceLeaderboard(config.showRaceLeaderboard);
+      if (config.isMaintenanceMode !== undefined) setIsMaintenanceMode(config.isMaintenanceMode);
     };
 
     const setupPusher = async () => {
@@ -246,18 +248,38 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch System Config (Global Broadcast, Map Nodes, & Maintenance Mode)
+        const resSystem = await fetch("/api/system");
+        const dataSystem = await resSystem.json();
+        if (dataSystem.success && dataSystem.config) {
+          setGlobalMessage(dataSystem.config.globalMessage || "");
+          setMapNodes(dataSystem.config.mapNodes || []);
+          if (dataSystem.config.isMaintenanceMode) {
+            setIsMaintenanceMode(true);
+            return; // Halt participant data polling while platform is under maintenance
+          } else {
+            setIsMaintenanceMode(false);
+          }
+        }
+
         const email = localStorage.getItem("userEmail");
         if (!email) {
           const resMe = await fetch("/api/auth/me", { cache: "no-store" });
           const meData = await resMe.json().catch(() => ({}));
-          if (meData?.authenticated && meData?.isAdmin) {
-            router.replace("/super-admin");
+          if (meData?.authenticated && meData?.role === "TEAM" && meData?.email) {
+            localStorage.setItem("userEmail", meData.email);
+            localStorage.setItem("isLoggedIn", "true");
+            setUserEmail(meData.email);
+          } else if (meData?.authenticated && meData?.isAdmin) {
+            // Admin is inspecting or previewing the dashboard without an impersonated email
+            return;
+          } else {
+            router.push("/login");
             return;
           }
-          router.push("/login");
-          return;
+        } else {
+          setUserEmail(email);
         }
-        setUserEmail(email);
 
         // Fetch Teams
         const resTeams = await fetch(`/api/teams?email=${encodeURIComponent(email)}`);
@@ -297,13 +319,6 @@ export default function DashboardPage() {
           setHasHackedMainframe(true);
         }
 
-        // Fetch System Config (Global Broadcast & Map Nodes)
-        const resSystem = await fetch("/api/system");
-        const dataSystem = await resSystem.json();
-        if (dataSystem.success && dataSystem.config) {
-          setGlobalMessage(dataSystem.config.globalMessage || "");
-          setMapNodes(dataSystem.config.mapNodes || []);
-        }
 
         // Fetch Comms Messages if authorized
         if (isCommsAuthorized) {

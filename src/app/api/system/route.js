@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import SystemConfig from "@/models/SystemConfig";
 import { pusherServer } from "@/lib/pusherServer";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
 
 const DEFAULT_MAP_NODES = [
   { id: 'arena', label: 'MAIN ARENA', x: '50%', y: '40%', status: 'ONLINE', desc: 'Robo Wars & Heavy Combat Zone', color: 'neon-cyan' },
@@ -62,6 +64,18 @@ export async function GET() {
 
 export async function POST(req) {
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("admin_token")?.value;
+
+    if (!token) {
+      return NextResponse.json({ success: false, error: "Unauthorized: Admin session required" }, { status: 401 });
+    }
+
+    const decoded = await verifyToken(token);
+    if (!decoded || !['SUPER_ADMIN', 'ADMIN'].includes(decoded.role)) {
+      return NextResponse.json({ success: false, error: "Forbidden: Super Admin or Admin access required" }, { status: 403 });
+    }
+
     await connectToDatabase();
     const payload = await req.json();
 

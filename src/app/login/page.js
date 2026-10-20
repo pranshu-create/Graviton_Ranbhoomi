@@ -29,7 +29,9 @@ export default function LoginPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated) {
-          router.replace(data.isAdmin ? "/super-admin" : "/dashboard");
+          if (!data.isAdmin) {
+            router.replace("/dashboard");
+          }
         } else {
           // Explicitly clear any stale flags
           localStorage.removeItem("isLoggedIn");
@@ -71,7 +73,7 @@ export default function LoginPage() {
         window.dispatchEvent(new Event("auth-change"));
         router.push("/dashboard");
       } else {
-        setError(data.error || "Authentication failed. Check credentials.");
+        setError(data.details || data.error || "Authentication failed. Check credentials.");
         setLoading(false);
       }
     } catch (err) {

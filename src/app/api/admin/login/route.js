@@ -207,6 +207,10 @@ export async function POST(req) {
     return response;
   } catch (error) {
     console.error('Admin Login Error:', error);
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      error: error.message || 'Internal server error', 
+      details: error.message 
+    }, { status: 500 });
   }
 }

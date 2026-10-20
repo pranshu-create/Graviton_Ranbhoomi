@@ -105,15 +105,11 @@ export default async function proxy(request) {
     const teamToken = request.cookies.get('team_token')?.value;
     const adminToken = request.cookies.get('admin_token')?.value;
 
-    // Admin has override access to API endpoints (accommodation, teams, files)
-    // If accessing the participant dashboard page directly, redirect admin to /super-admin
+    // Admin has override access to API endpoints (accommodation, teams, files) and can inspect/preview the dashboard
     if (adminToken) {
       const decodedAdmin = await verifyToken(adminToken);
       const validRoles = ['SUPER_ADMIN', 'ADMIN', 'VOLUNTEER', 'HOSTEL_AUTHORITY', 'BOYS_HOSTEL_SECURITY', 'GIRLS_HOSTEL_SECURITY', 'HOSTEL_STAFF'];
       if (decodedAdmin && validRoles.includes(decodedAdmin.role)) {
-        if (pathname === '/dashboard' || pathname.startsWith('/dashboard/')) {
-          return NextResponse.redirect(new URL('/super-admin', request.url));
-        }
         sanitizedHeaders.set('x-admin-email', decodedAdmin.email);
         sanitizedHeaders.set('x-admin-role', decodedAdmin.role);
         sanitizedHeaders.set('x-user-role', decodedAdmin.role);
