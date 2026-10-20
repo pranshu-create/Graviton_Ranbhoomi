@@ -3,18 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, Eye, EyeOff } from "lucide-react";
 
 export default function AdminLogin() {
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [authError, setAuthError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const extremeCut = { clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)" };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    setLoading(true);
     try {
       const res = await fetch("/api/admin/login", {
         method: "POST",
@@ -35,6 +39,8 @@ export default function AdminLogin() {
       }
     } catch (err) {
       setAuthError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,21 +75,32 @@ export default function AdminLogin() {
                   Forgot passphrase?
                 </Link>
               </div>
-              <input 
-                type="password" 
-                value={passwordInput} 
-                onChange={(e) => setPasswordInput(e.target.value)}
-                className={`w-full bg-black border ${authError ? 'border-red-500 animate-pulse' : 'border-white/20 focus:border-red-500'} p-3 text-center text-white tracking-[0.5em] focus:outline-none transition-colors`}
-                placeholder="••••••••••••••"
-              />
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  value={passwordInput} 
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  className={`w-full bg-black border ${authError ? 'border-red-500 animate-pulse' : 'border-white/20 focus:border-red-500'} p-3 pr-10 text-center text-white tracking-[0.5em] focus:outline-none transition-colors`}
+                  placeholder="••••••••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors"
+                  aria-label={showPassword ? "Hide passphrase" : "Show passphrase"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
             {authError && <p className="text-red-500 text-[10px] mt-2 uppercase tracking-widest text-center font-bold">ACCESS DENIED. INTRUSION LOGGED.</p>}
           </div>
           <button 
             type="submit" 
-            className="w-full bg-red-500/20 text-red-500 border border-red-500 py-3 font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white transition-colors"
+            disabled={loading}
+            className={`w-full bg-red-500/20 text-red-500 border border-red-500 py-3 font-bold uppercase tracking-widest transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-500 hover:text-white'}`}
           >
-            AUTHENTICATE
+            {loading ? "AUTHENTICATING..." : "AUTHENTICATE"}
           </button>
         </form>
         <div className="mt-8 text-center">

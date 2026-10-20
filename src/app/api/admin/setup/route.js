@@ -5,16 +5,24 @@ import { hashPassword } from '@/lib/auth';
 
 export async function GET(req) {
   try {
+    // 1. In production, require SETUP_SECRET
+    const setupSecret = process.env.SETUP_SECRET;
+    const providedSecret = req.headers.get('x-setup-secret');
+    if (process.env.NODE_ENV === 'production' && (!setupSecret || providedSecret !== setupSecret)) {
+      return NextResponse.json({ success: false, error: 'Unauthorized: Endpoint is locked.' }, { status: 403 });
+    }
+
     await connectToDatabase();
     
-    // Check if Pranshu already exists
-    const existingAdmin = await AdminUser.findOne({ email: 'pranshu@graviton.in' });
+    // Check if any SUPER_ADMIN already exists
+    const existingAdmin = await AdminUser.findOne({ role: 'SUPER_ADMIN' });
     
     if (existingAdmin) {
-      return NextResponse.json({ success: true, message: 'Super Admin already exists.' });
+      return NextResponse.json({ success: false, error: 'Endpoint decommissioned. Administrative structure is already established.' }, { status: 404 });
     }
     
-    const hashedPassword = await hashPassword('Pranshu@671'); // Default initial password
+    const adminPassword = process.env.ADMIN_INITIAL_PASSWORD || 'Pranshu@671';
+    const hashedPassword = await hashPassword(adminPassword);
     
     await AdminUser.create({
       name: 'Pranshu',
@@ -23,9 +31,9 @@ export async function GET(req) {
       role: 'SUPER_ADMIN'
     });
     
-    return NextResponse.json({ success: true, message: 'Super Admin Pranshu created successfully!' });
+    return NextResponse.json({ success: true, message: 'Super Admin initialized successfully.' });
   } catch (error) {
     console.error('Setup error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to run setup', details: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Setup failure' }, { status: 500 });
   }
 }

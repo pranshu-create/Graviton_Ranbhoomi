@@ -68,6 +68,18 @@ export async function POST(req) {
       path: "/"
     });
 
+    // Clear any lingering admin token to prevent session collision
+    response.cookies.set({
+      name: "admin_token",
+      value: "",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+      maxAge: 0,
+      path: "/"
+    });
+
     return response;
 
   } catch (error) {

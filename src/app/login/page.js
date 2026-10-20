@@ -4,17 +4,48 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GlitchText from "@/components/GlitchText";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("eradicated") === "true") {
+        return "This squad record was eradicated by administration. Your session has ended.";
+      }
+    }
+    return "";
+  });
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    // If the user lands on /login, verify if they already have an active server session
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          router.replace(data.isAdmin ? "/super-admin" : "/dashboard");
+        } else {
+          // Explicitly clear any stale flags
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("userEmail");
+          window.dispatchEvent(new Event("auth-change"));
+        }
+      })
+      .catch(() => {
+        localStorage.removeItem("isLoggedIn");
+        window.dispatchEvent(new Event("auth-change"));
+      });
+  }, [router]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     setError("");
 
@@ -99,7 +130,21 @@ export default function LoginPage() {
                   </Link>
                 </div>
                 <div style={cutCorners} className="relative">
-                  <input name="password" type="password" required className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:bg-neon-cyan/5 transition-colors font-mono text-sm" placeholder="••••••••" />
+                  <input 
+                    name="password" 
+                    type={showPassword ? "text" : "password"} 
+                    required 
+                    className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 pr-10 text-white focus:outline-none focus:border-neon-cyan focus:bg-neon-cyan/5 transition-colors font-mono text-sm" 
+                    placeholder="••••••••" 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 

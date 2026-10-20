@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import GlitchText from "@/components/GlitchText";
 
 const bootLines = [
@@ -121,7 +122,7 @@ export default function IntroCinematic() {
                   exit={{ opacity: 0, y: -50, filter: "blur(10px)", transition: { duration: 0.8 } }}
                   className="absolute flex flex-col items-center"
                 >
-                  <img src="/Raw.png" alt="Graviton" className="w-32 h-32 md:w-40 md:h-40 object-contain mb-8 animate-pulse drop-shadow-[0_0_20px_rgba(138,43,226,0.5)]" />
+                  <Image src="/Raw.png" alt="Graviton" width={160} height={160} className="w-32 h-32 md:w-40 md:h-40 object-contain mb-8 animate-pulse drop-shadow-[0_0_20px_rgba(138,43,226,0.5)]" priority />
                   <p className="font-mono text-sm md:text-base text-gray-400 tracking-[0.5em] uppercase border-b border-white/20 pb-4 px-8">
                     GRAVITON ROBOTICS <span className="text-neon-cyan font-bold">PRESENTS</span>
                   </p>

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import GlitchText from "@/components/GlitchText";
 import { motion } from "framer-motion";
 import SignalInterceptor from "@/components/SignalInterceptor";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function RegisterPage() {
   const [userEmail, setUserEmail] = useState("");
   const [showInterceptor, setShowInterceptor] = useState(false);
   const [interceptedEvent, setInterceptedEvent] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     const checkSystemState = async () => {
@@ -42,20 +45,46 @@ export default function RegisterPage() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const prefilled = params.get("event");
-      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-      const email = localStorage.getItem("userEmail") || "";
-      setTimeout(() => {
-        if (prefilled) {
+      if (prefilled) {
+        setTimeout(() => {
           setSelectedEvent(prefilled);
-        }
-        setIsLoggedIn(loggedIn);
-        setUserEmail(email);
-      }, 0);
+        }, 0);
+      }
+
+      // Verify active session with backend
+      fetch("/api/auth/me", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.authenticated && !data.isAdmin && data.email) {
+            setIsLoggedIn(true);
+            setUserEmail(data.email);
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userEmail", data.email);
+          } else {
+            setIsLoggedIn(false);
+            setUserEmail("");
+            localStorage.removeItem("userEmail");
+            if (!data.isAdmin) {
+              localStorage.removeItem("isLoggedIn");
+            }
+          }
+        })
+        .catch(() => {
+          setIsLoggedIn(false);
+          setUserEmail("");
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("userEmail");
+        });
     }
   }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (loading) return;
+    if (!termsAccepted) {
+      alert("Please accept the Terms & Conditions and Privacy Policy to register.");
+      return;
+    }
     
     // Extract data from form (simplified for prototype)
     const formData = new FormData(e.target);
@@ -115,6 +144,9 @@ export default function RegisterPage() {
       if (data.success) {
         localStorage.setItem("userEmail", formData.get("m1_email")); // Save Leader Email
         localStorage.setItem("isLoggedIn", "true");
+        if (teamName) {
+          localStorage.setItem("registeredTeamName", teamName);
+        }
         window.dispatchEvent(new Event("auth-change"));
         router.push("/thank-you");
       } else {
@@ -231,7 +263,21 @@ export default function RegisterPage() {
                       <div>
                         <label className="block text-[10px] font-mono text-electric-purple mb-2 uppercase tracking-[0.2em]">&gt; SECURE_PASSWORD</label>
                         <div style={cutCorners} className="relative">
-                          <input name="password" type="password" required className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 text-white focus:outline-none focus:border-electric-purple focus:bg-electric-purple/5 transition-colors font-mono text-sm" placeholder="••••••••" />
+                          <input 
+                            name="password" 
+                            type={showPassword ? "text" : "password"} 
+                            required 
+                            className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 pr-10 text-white focus:outline-none focus:border-electric-purple focus:bg-electric-purple/5 transition-colors font-mono text-sm" 
+                            placeholder="••••••••" 
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                          >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
                         </div>
                       </div>
                     )}
@@ -280,11 +326,36 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
+                {/* Terms and Privacy consent */}
+                <div className="flex items-start gap-3 pt-2">
+                  <input
+                    id="terms-accepted"
+                    name="termsAccepted"
+                    type="checkbox"
+                    required
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-white/20 bg-black/50 text-electric-purple focus:ring-electric-purple focus:ring-offset-0 cursor-pointer accent-electric-purple"
+                  />
+                  <label htmlFor="terms-accepted" className="text-xs font-mono text-gray-400 cursor-pointer select-none">
+                    I have read and agree to the{" "}
+                    <Link href="/terms" target="_blank" rel="noopener noreferrer" className="text-electric-purple underline hover:text-white transition-colors">
+                      Terms & Conditions
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="text-electric-purple underline hover:text-white transition-colors">
+                      Privacy Policy
+                    </Link>.
+                  </label>
+                </div>
+
                 <button 
                   type="submit" 
-                  disabled={loading}
+                  disabled={loading || !termsAccepted}
                   style={cutCorners}
-                  className="w-full py-5 bg-electric-purple/10 border border-electric-purple text-electric-purple font-display font-bold tracking-[0.2em] hover:bg-electric-purple hover:text-white transition-all duration-300 hover:box-glow-purple flex items-center justify-center mt-8 relative overflow-hidden group/btn"
+                  className={`w-full py-5 bg-electric-purple/10 border border-electric-purple text-electric-purple font-display font-bold tracking-[0.2em] transition-all duration-300 flex items-center justify-center mt-6 relative overflow-hidden group/btn ${
+                    loading || !termsAccepted ? "opacity-50 cursor-not-allowed" : "hover:bg-electric-purple hover:text-white hover:box-glow-purple"
+                  }`}
                 >
                   <span className="relative z-10 group-hover/btn:text-white">
                     {loading ? "INITIALIZING DATA..." : "COMMIT TEAM DATA"}

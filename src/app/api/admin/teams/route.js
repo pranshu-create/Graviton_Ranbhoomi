@@ -27,6 +27,25 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, error: "Operative not found in database." }, { status: 404 });
     }
 
+    // Eradicate corresponding accommodation requests
+    try {
+      const { default: Accommodation } = await import("@/models/Accommodation");
+      await Accommodation.deleteMany({ teamId: deletedTeam.teamId });
+    } catch (accErr) {
+      console.warn("Accommodation eradication cleanup notice:", accErr);
+    }
+
+    // Broadcast eradication to immediately purge active client sessions
+    try {
+      const { pusherServer } = await import("@/lib/pusherServer");
+      await pusherServer.trigger("god-mode-channel", "team-eradicated", {
+        teamId: deletedTeam.teamId,
+        leaderEmail: deletedTeam.memberDetails?.[0]?.email
+      });
+    } catch (pushErr) {
+      console.warn("Pusher eradication trigger failed:", pushErr);
+    }
+
     return NextResponse.json({ success: true, message: "Operative data eradicated permanently." });
   } catch (error) {
     console.error("Eradication Error:", error);

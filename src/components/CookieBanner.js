@@ -3,14 +3,19 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import Link from "next/link";
+
 export default function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("cookie_consent");
-    if (!consent) {
-      setShowBanner(true);
-    }
+    const timer = setTimeout(() => {
+      const consent = localStorage.getItem("cookie_consent");
+      if (!consent) {
+        setShowBanner(true);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleAccept = () => {
@@ -38,12 +43,16 @@ export default function CookieBanner() {
               </h3>
             </div>
             <p className="text-gray-400 font-mono text-xs leading-relaxed">
-              RANBHOOMI utilizes essential cookies to ensure optimal system performance and secure connections. Acknowledge to proceed.
+              RANBHOOMI utilizes essential cookies to ensure optimal system performance and secure connections. Review our{" "}
+              <Link href="/cookies" className="text-electric-purple underline hover:text-white">
+                Cookie Policy
+              </Link>
+              .
             </p>
             <div className="flex justify-end gap-2 mt-2">
               <button
                 onClick={handleAccept}
-                className="px-4 py-2 bg-electric-purple/20 border border-electric-purple text-electric-purple hover:bg-electric-purple hover:text-white transition-all font-mono text-xs uppercase tracking-widest"
+                className="px-4 py-2 bg-electric-purple/20 border border-electric-purple text-electric-purple hover:bg-electric-purple hover:text-white transition-all font-mono text-xs uppercase tracking-widest cursor-pointer"
                 style={cutCorners}
               >
                 Acknowledge

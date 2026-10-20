@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
+import Image from 'next/image';
 import * as htmlToImage from 'html-to-image';
 import { Download, Orbit, Upload, Cpu, Zap, Activity, ShieldCheck, Target, SquareTerminal } from 'lucide-react';
 
@@ -179,7 +180,7 @@ export default function CoreIdGenerator() {
             </div>
             <div className="relative">
               <div className="absolute inset-0 bg-red-600/20 blur-xl rounded-full scale-150 animate-pulse"></div>
-              <img src="/Logo.png" alt="Logo" className="w-24 h-24 relative z-10 filter brightness-0 invert" style={{ filter: 'brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.4))' }} />
+              <Image src="/Logo.png" alt="Logo" width={96} height={96} className="w-24 h-24 relative z-10 filter brightness-0 invert" style={{ filter: 'brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.4))' }} priority />
             </div>
           </div>
 
@@ -195,6 +196,7 @@ export default function CoreIdGenerator() {
 
               <div className="w-[280px] h-[320px] bg-[#111] overflow-hidden relative shadow-[0_0_50px_rgba(220,38,38,0.2)]" style={hexClip}>
                 {formData.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={formData.photo} alt="Operative" className="w-full h-full object-cover filter contrast-110 brightness-110" />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-[#0a0a0a]">

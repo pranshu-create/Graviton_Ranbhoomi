@@ -8,6 +8,10 @@ const securityHeaders = [
     value: 'nosniff'
   },
   {
+    key: 'X-DNS-Prefetch-Control',
+    value: 'on'
+  },
+  {
     key: 'Referrer-Policy',
     value: 'strict-origin-when-cross-origin'
   },
@@ -21,13 +25,25 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://api.qrserver.com; connect-src 'self' wss://ws-ap2.pusher.com wss://ws.pusher.com https://sockjs-ap2.pusher.com https://challenges.cloudflare.com; font-src 'self' data:; frame-src 'self' https://challenges.cloudflare.com;"
+    value: "default-src 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://api.qrserver.com https://www.transparenttextures.com https://static.whatsapp.net https://via.placeholder.com; connect-src 'self' https://api.ipify.org wss://ws-ap2.pusher.com wss://ws.pusher.com https://sockjs-ap2.pusher.com https://challenges.cloudflare.com; font-src 'self' data:; frame-src 'self' https://challenges.cloudflare.com;"
   }
 ];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['pdfkit'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.qrserver.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+    ],
+  },
   async headers() {
     return [
       {
@@ -39,4 +55,3 @@ const nextConfig = {
 };
 
 export default nextConfig;
-

@@ -40,13 +40,53 @@ export async function GET(req) {
     }
 
     const teams = await Team.find(query).sort({ date: -1 });
+
+    // If an authenticated team user has 0 teams, their squad was eradicated
+    if (userRole === "TEAM" && teams.length === 0) {
+      const response = NextResponse.json(
+        { error: "Squad not found or eradicated by administration", eradicated: true, teams: [] },
+        { status: 401 }
+      );
+      response.cookies.set("team_token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        expires: new Date(0),
+        maxAge: 0,
+        path: "/"
+      });
+      return response;
+    }
     
-    // Map _id to id for frontend compatibility
-    const formattedTeams = teams.map(t => ({
-      ...t.toObject(),
-      id: t.teamId,
-      _id: t._id.toString()
-    }));
+    // Map _id to id for frontend compatibility and strip sensitive credentials
+    const formattedTeams = teams.map(t => {
+      const obj = t.toObject();
+      delete obj.password;
+      delete obj.emailVerificationToken;
+      delete obj.passwordResetToken;
+      delete obj.twoFactorCode;
+      delete obj.screenshotHash;
+
+      // Public view: only reveal tournament/leaderboard public details
+      if (!userRole) {
+        return {
+          id: t.teamId,
+          _id: t._id.toString(),
+          name: obj.name,
+          event: obj.event,
+          institution: obj.institution,
+          runs: obj.runs || [],
+          status: obj.status,
+          members: obj.members,
+        };
+      }
+
+      return {
+        ...obj,
+        id: t.teamId,
+        _id: t._id.toString()
+      };
+    });
     
     return NextResponse.json({ teams: formattedTeams });
   } catch (error) {
@@ -235,6 +275,18 @@ export async function POST(req) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 60 * 60 * 24, // 1 day
+      path: "/"
+    });
+
+    // Clear any lingering admin token to prevent session collision
+    response.cookies.set({
+      name: "admin_token",
+      value: "",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+      maxAge: 0,
       path: "/"
     });
 

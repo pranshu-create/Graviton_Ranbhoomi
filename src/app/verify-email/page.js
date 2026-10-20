@@ -20,7 +20,7 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedEmail = localStorage.getItem("userEmail") || "";
-      setEmail(storedEmail);
+      setTimeout(() => setEmail(storedEmail), 0);
     }
   }, []);
 

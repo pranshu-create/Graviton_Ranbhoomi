@@ -4,6 +4,7 @@ import AdminUser from '@/models/AdminUser';
 import Log from '@/models/Log';
 import { verifyPassword, signToken } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limiter';
+import mongoSanitize from 'mongo-sanitize';
 import fs from 'fs';
 import path from 'path';
 
@@ -47,10 +48,12 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: 'Too many login attempts. Please try again later.' }, { status: 429 });
     }
 
-    const { email, password } = await req.json();
+    const rawBody = await req.json();
+    const sanitizedBody = mongoSanitize(rawBody);
+    const { email, password } = sanitizedBody;
 
-    if (!email || !password) {
-      return NextResponse.json({ success: false, error: 'Email and password required' }, { status: 400 });
+    if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+      return NextResponse.json({ success: false, error: 'Valid email and password required' }, { status: 400 });
     }
 
     let admin = null;
@@ -175,6 +178,18 @@ export async function POST(req) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24, // 1 day
+      path: '/'
+    });
+
+    // Clear any lingering team token to prevent session collision
+    response.cookies.set({
+      name: 'team_token',
+      value: '',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      expires: new Date(0),
+      maxAge: 0,
       path: '/'
     });
     

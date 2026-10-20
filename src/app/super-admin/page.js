@@ -813,10 +813,13 @@ export default function SuperAdminDashboard() {
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
-      window.location.href = '/admin-login';
     } catch (e) {
       console.error('Logout failed', e);
     }
+    localStorage.removeItem("adminEmail");
+    localStorage.removeItem("isLoggedIn");
+    window.dispatchEvent(new Event("auth-change"));
+    window.location.href = '/admin-login';
   };
 
   const handleAnalyze = useCallback(async (team) => {
@@ -1010,6 +1013,7 @@ export default function SuperAdminDashboard() {
                 <X className="w-6 h-6" />
               </button>
               <div className="w-full aspect-video bg-black/80 flex items-center justify-center flex-col relative border border-white/5 overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={viewingScreenshot}
                   alt="Payment Screenshot"
@@ -2115,6 +2119,7 @@ export default function SuperAdminDashboard() {
                       return (
                         <div className="w-full h-full flex flex-col justify-between relative z-10">
                           <div className="relative w-full h-[450px] border border-white/10 bg-black flex items-center justify-center overflow-hidden">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={team.screenshot}
                               alt="Transaction Screenshot"
@@ -3348,6 +3353,7 @@ export default function SuperAdminDashboard() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                 {sponsorsList.map(s => (
                   <div key={s._id} className="bg-white/5 p-4 border border-white/10 flex flex-col items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={s.logoUrl} alt="Sponsor Logo" className="w-16 h-16 object-contain mb-2" />
                     <p className="font-bold text-center text-xs text-white">{s.name}</p>
                     <span className="text-[10px] text-pink-400">{s.tier}</span>

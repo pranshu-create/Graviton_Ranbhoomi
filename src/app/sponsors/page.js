@@ -41,6 +41,7 @@ export default function SponsorsPage() {
               className="bg-black/60 p-12 max-w-3xl mx-auto border-y-2 border-neon-cyan hover:bg-neon-cyan/10 transition-colors duration-500 flex items-center justify-center relative group"
             >
               <div className="absolute inset-0 bg-neon-cyan opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500"></div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={placeholderLogo} alt="Title Sponsor" className="w-full max-w-md mx-auto opacity-70 group-hover:opacity-100 transition-opacity mix-blend-luminosity group-hover:mix-blend-normal" />
             </motion.div>
           </section>
@@ -61,6 +62,7 @@ export default function SponsorsPage() {
                   style={cutCorners}
                   className="bg-black/40 p-10 border border-electric-purple/20 border-l-4 border-l-electric-purple flex items-center justify-center hover:bg-electric-purple/10 md:border-white/5 transition-colors duration-300 group relative"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={placeholderLogo} alt={`Powered By ${i}`} className="w-full max-w-xs mx-auto opacity-70 group-hover:opacity-100 transition-opacity mix-blend-luminosity group-hover:mix-blend-normal" />
                 </motion.div>
               ))}
@@ -83,6 +85,7 @@ export default function SponsorsPage() {
                   style={{ clipPath: "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)" }}
                   className="bg-black/20 p-6 border border-neon-cyan/25 md:border-white/10 flex items-center justify-center hover:border-neon-cyan/50 hover:bg-white/5 transition-all duration-300 group"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={placeholderLogo} alt={`Tech Partner ${i}`} className="w-full max-w-[150px] mx-auto opacity-50 group-hover:opacity-100 transition-opacity mix-blend-luminosity group-hover:mix-blend-normal" />
                 </motion.div>
               ))}

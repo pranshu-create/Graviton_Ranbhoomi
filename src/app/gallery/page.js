@@ -150,6 +150,7 @@ function ClassifiedCard({ photo, index, onOpen }) {
       >
         {/* Image */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photo.src}
             alt={photo.subject}
@@ -324,6 +325,7 @@ function LightboxViewer({ photo, onClose }) {
         <div className="flex flex-col md:flex-row">
           {/* Image Side */}
           <div className="flex-1 relative bg-black">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo.src} alt={photo.subject} className="w-full h-full object-cover max-h-[40vh] md:max-h-[none]" />
             {/* Corner marks */}
             <div className="absolute top-2 left-2 w-5 h-5 border-t-2 border-l-2 border-neon-cyan/70 pointer-events-none" />

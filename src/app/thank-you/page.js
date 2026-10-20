@@ -5,8 +5,19 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import GlitchText from "@/components/GlitchText";
+import { useSyncExternalStore } from "react";
+
+function subscribe(callback) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getRegisteredTeam() {
+  return localStorage.getItem("registeredTeamName") || "";
+}
 
 export default function ThankYouPage() {
+  const teamName = useSyncExternalStore(subscribe, getRegisteredTeam, () => "");
   const cutCorners = { clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)" };
 
   return (
@@ -30,12 +41,16 @@ export default function ThankYouPage() {
               </svg>
             </div>
             
-            <h1 className="font-display font-black text-4xl text-white tracking-tighter mb-4 uppercase">
-              TRANSACTION <GlitchText text="COMPLETE" className="text-neon-cyan text-glow-cyan" />
+            <h1 className="font-display font-black text-3xl sm:text-4xl text-white tracking-tighter mb-4 uppercase">
+              WELCOME TO THE <GlitchText text="TEAM" className="text-neon-cyan text-glow-cyan" />
             </h1>
             
             <p className="font-mono text-sm text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
-              Your registration data has been successfully securely transmitted to the central server. Welcome to RANBHOOMI. Prepare your systems for combat.
+              {teamName ? (
+                <>Squad <span className="text-neon-cyan font-bold">{teamName}</span> is officially enlisted. Your registration data has been successfully securely transmitted to the central server. Welcome to RANBHOOMI. Prepare your systems for combat.</>
+              ) : (
+                <>Your registration data has been successfully securely transmitted to the central server. Welcome to RANBHOOMI. Prepare your systems for combat.</>
+              )}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

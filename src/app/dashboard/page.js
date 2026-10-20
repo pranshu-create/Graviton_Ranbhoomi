@@ -218,6 +218,17 @@ export default function DashboardPage() {
       
       channel.bind("comms-broadcast", handleComms);
       channel.bind("system-update", handleSystemUpdate);
+
+      const handleTeamEradicated = (data) => {
+        const curEmail = localStorage.getItem("userEmail");
+        if (data && data.leaderEmail && curEmail && data.leaderEmail.toLowerCase() === curEmail.toLowerCase()) {
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("isLoggedIn");
+          window.dispatchEvent(new Event("auth-change"));
+          router.push("/login?eradicated=true");
+        }
+      };
+      channel.bind("team-eradicated", handleTeamEradicated);
     };
 
     setupPusher();
@@ -226,9 +237,10 @@ export default function DashboardPage() {
       if (channel) {
         channel.unbind("comms-broadcast", handleComms);
         channel.unbind("system-update", handleSystemUpdate);
+        channel.unbind("team-eradicated");
       }
     };
-  }, []);
+  }, [router]);
 
   // Sync with Backend
   useEffect(() => {
@@ -236,6 +248,12 @@ export default function DashboardPage() {
       try {
         const email = localStorage.getItem("userEmail");
         if (!email) {
+          const resMe = await fetch("/api/auth/me", { cache: "no-store" });
+          const meData = await resMe.json().catch(() => ({}));
+          if (meData?.authenticated && meData?.isAdmin) {
+            router.replace("/super-admin");
+            return;
+          }
           router.push("/login");
           return;
         }
@@ -243,6 +261,14 @@ export default function DashboardPage() {
 
         // Fetch Teams
         const resTeams = await fetch(`/api/teams?email=${encodeURIComponent(email)}`);
+        if (resTeams.status === 401 || resTeams.status === 403) {
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("isLoggedIn");
+          window.dispatchEvent(new Event("auth-change"));
+          const dataErr = await resTeams.json().catch(() => ({}));
+          router.push(dataErr?.eradicated ? "/login?eradicated=true" : "/login");
+          return;
+        }
         const dataTeams = await resTeams.json();
         const teams = dataTeams.teams && dataTeams.teams.length > 0 ? dataTeams.teams : [];
         
@@ -1017,6 +1043,7 @@ export default function DashboardPage() {
                       <p className="font-mono text-xs text-red-400 mb-6 relative z-10">CLASSIFIED TOP SECRET DOCUMENT EXPOSED.</p>
                       
                       <div className="relative border-2 border-red-500/30 mb-6 group-hover:border-red-500 transition-colors">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/mech_blueprint.png" alt="Classified Mech Blueprint" className="w-full h-auto opacity-80 group-hover:opacity-100 transition-opacity" />
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 border-red-500 text-red-500 font-black text-3xl md:text-5xl rotate-[-15deg] px-6 py-2 opacity-70 pointer-events-none drop-shadow-md">
                           TOP SECRET

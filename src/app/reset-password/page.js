@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { KeyRound, ShieldAlert } from "lucide-react";
+import { KeyRound, ShieldAlert, Eye, EyeOff } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GlitchText from "@/components/GlitchText";
@@ -15,15 +15,13 @@ function ResetPasswordForm() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  useEffect(() => {
-    if (!token) {
-      setError("Missing reset token. Please request a new link.");
-    }
-  }, [token]);
+  const displayError = error || (!token ? "Missing reset token. Please request a new link." : "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,9 +84,9 @@ function ResetPasswordForm() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         
-        {error && (
+        {displayError && (
           <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 text-xs font-mono text-center" style={cutCorners}>
-            {error}
+            {displayError}
           </div>
         )}
 
@@ -102,13 +100,21 @@ function ResetPasswordForm() {
           <label className="block text-[10px] font-mono text-neon-cyan mb-2 uppercase tracking-[0.2em]">&gt; NEW_PASSPHRASE</label>
           <div style={cutCorners} className="relative">
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               required 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:bg-neon-cyan/5 transition-all font-mono text-sm" 
+              className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 pr-12 text-white focus:outline-none focus:border-neon-cyan focus:bg-neon-cyan/5 transition-all font-mono text-sm" 
               placeholder="••••••••" 
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-neon-cyan focus:outline-none p-1"
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
@@ -116,13 +122,21 @@ function ResetPasswordForm() {
           <label className="block text-[10px] font-mono text-neon-cyan mb-2 uppercase tracking-[0.2em]">&gt; CONFIRM_PASSPHRASE</label>
           <div style={cutCorners} className="relative">
             <input 
-              type="password" 
+              type={showConfirmPassword ? "text" : "password"} 
               required 
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 text-white focus:outline-none focus:border-neon-cyan focus:bg-neon-cyan/5 transition-all font-mono text-sm" 
+              className="w-full bg-white/5 border-b-2 border-white/20 px-4 py-3 pr-12 text-white focus:outline-none focus:border-neon-cyan focus:bg-neon-cyan/5 transition-all font-mono text-sm" 
               placeholder="••••••••" 
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-neon-cyan focus:outline-none p-1"
+            >
+              {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 

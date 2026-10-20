@@ -96,9 +96,18 @@ export default function LiveScoringHub() {
       if (loggedIn && email) {
         setUserEmail(email);
         fetch(`/api/teams?email=${encodeURIComponent(email)}`)
-          .then((r) => r.json())
+          .then((r) => {
+            if (r.status === 401 || r.status === 403) {
+              setIsUserLoggedIn(false);
+              localStorage.removeItem("isLoggedIn");
+              localStorage.removeItem("userEmail");
+              window.dispatchEvent(new Event("auth-change"));
+              return null;
+            }
+            return r.json();
+          })
           .then((data) => {
-            if (data.teams) {
+            if (data && data.teams) {
               setUserTeams(data.teams);
             }
           })
@@ -274,6 +283,7 @@ export default function LiveScoringHub() {
                   {systemBrackets[bracketSubTab]?.pdfUrl && (
                     <div className="border border-white/10 rounded-lg overflow-hidden bg-white/5 relative group shadow-[0_0_20px_rgba(102,252,241,0.05)]">
                       {systemBrackets[bracketSubTab].pdfUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={systemBrackets[bracketSubTab].pdfUrl}
                           alt={`${bracketSubTab} Official Bracket`}

@@ -10,8 +10,19 @@ export async function verifyPassword(password, hashedPassword) {
   return bcrypt.compare(password, hashedPassword);
 }
 
+function getJwtSecret() {
+  const secretStr = process.env.JWT_SECRET;
+  if (!secretStr) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('FATAL: JWT_SECRET environment variable is missing in production.');
+    }
+    return new TextEncoder().encode('fallback_super_secret_graviton_key_2026');
+  }
+  return new TextEncoder().encode(secretStr);
+}
+
 export async function signToken(payload) {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_super_secret_graviton_key_2026');
+  const secret = getJwtSecret();
   const iat = Math.floor(Date.now() / 1000);
   const exp = iat + 24 * 60 * 60; // 24 hours
 
@@ -25,7 +36,7 @@ export async function signToken(payload) {
 
 export async function verifyToken(token) {
   try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_super_secret_graviton_key_2026');
+    const secret = getJwtSecret();
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch (error) {

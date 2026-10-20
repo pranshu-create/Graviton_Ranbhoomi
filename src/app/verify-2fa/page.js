@@ -19,9 +19,10 @@ export default function Verify2FAPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedEmail = localStorage.getItem("userEmail") || "";
-      setEmail(storedEmail);
       if (!storedEmail) {
         router.push("/login");
+      } else {
+        setTimeout(() => setEmail(storedEmail), 0);
       }
     }
   }, [router]);

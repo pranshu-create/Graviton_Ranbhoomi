@@ -126,10 +126,11 @@ export default function Footer() {
           <p className="text-gray-500 text-sm">
             &copy; {new Date().getFullYear()} Graviton Robotics. All rights reserved.
           </p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
+          <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
             <Link href="/privacy" className="text-gray-500 hover:text-white text-sm">Privacy Policy</Link>
             <Link href="/terms" className="text-gray-500 hover:text-white text-sm">Terms of Service</Link>
             <Link href="/refund" className="text-gray-500 hover:text-white text-sm">Refund Policy</Link>
+            <Link href="/cookies" className="text-gray-500 hover:text-white text-sm">Cookie Policy</Link>
           </div>
         </div>
       </div>

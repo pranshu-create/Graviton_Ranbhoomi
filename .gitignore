@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# secrets
+# secrets and local data
 RANBHOOMI_SECRETS.txt
+db_mock.json
+private-uploads/
+*.pdf
+*.log
 

@@ -63,6 +63,18 @@ export async function POST(req) {
       maxAge: 60 * 60 * 24, // 1 day
       path: "/"
     });
+
+    // Clear any lingering team token to prevent session collision
+    response.cookies.set({
+      name: "team_token",
+      value: "",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+      maxAge: 0,
+      path: "/"
+    });
     
     await Log.create({
       action: "LOGIN",

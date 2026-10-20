@@ -3,20 +3,26 @@
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function Template({ children }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Play the transition audio on every page transition/mount
+    // Respect user's reduced motion and audio preferences
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
     const playTransitionAudio = async () => {
       try {
+        const isMuted = localStorage.getItem("audio_muted") === "true";
+        if (isMuted) return;
+
         const audio = new Audio('/Transition-audio.mp3');
-        audio.volume = 0.5; // Set volume to 50%
+        audio.volume = 0.2;
         await audio.play();
       } catch (error) {
-        // This fails silently if the user hasn't interacted with the page yet (browser policy)
-        console.log("Transition audio play blocked by browser:", error);
+        // Browser autoplay restriction
       }
     };
     
@@ -38,7 +44,7 @@ export default function Template({ children }) {
           animate={{ scale: 1, opacity: 0 }}
           transition={{ duration: 0.5, delay: 0.9 }}
         >
-          <img src="/Logo.png" alt="System Logo" className="w-24 h-24 object-contain mb-8 animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+          <Image src="/Logo.png" alt="System Logo" width={96} height={96} className="w-24 h-24 object-contain mb-8 animate-pulse drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" priority />
           <span className="text-neon-cyan font-mono text-xs tracking-[0.4em] uppercase mb-6 text-center">
             ESTABLISHING_UPLINK
           </span>

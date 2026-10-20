@@ -50,68 +50,68 @@ export default function TournamentBracket({ matches = [], eventName = "" }) {
     matches: roundsMap[name],
   }));
 
-  const updatePaths = () => {
-    if (!containerRef.current || rounds.length < 2) {
-      setConnections([]);
-      return;
-    }
-    const newConnections = [];
-    const containerRect = containerRef.current.getBoundingClientRect();
-
-    for (let rIdx = 0; rIdx < rounds.length - 1; rIdx++) {
-      const currentMatches = rounds[rIdx].matches;
-      const nextMatches = rounds[rIdx + 1].matches;
-
-      currentMatches.forEach((match, mIdx) => {
-        let nextMatchIdx = -1;
-
-        // 1. Try to find match in next round by matching winner team ID
-        if (match.winnerId) {
-          nextMatchIdx = nextMatches.findIndex(
-            (nm) => nm.team1?.id === match.winnerId || nm.team2?.id === match.winnerId
-          );
-        }
-
-        // 2. Fallback to index-based connection
-        if (nextMatchIdx === -1) {
-          nextMatchIdx = Math.floor(mIdx / 2);
-        }
-
-        if (nextMatchIdx >= 0 && nextMatchIdx < nextMatches.length) {
-          const nextMatch = nextMatches[nextMatchIdx];
-          const startEl = document.getElementById(`match-node-${match.matchId}`);
-          const endEl = document.getElementById(`match-node-${nextMatch.matchId}`);
-
-          if (startEl && endEl) {
-            const startRect = startEl.getBoundingClientRect();
-            const endRect = endEl.getBoundingClientRect();
-
-            const x1 = startRect.right - containerRect.left;
-            const y1 = startRect.top + startRect.height / 2 - containerRect.top;
-
-            const x2 = endRect.left - containerRect.left;
-            const y2 = endRect.top + endRect.height / 2 - containerRect.top;
-
-            const isWinnerPropagated = match.winnerId &&
-              (nextMatch.team1?.id === match.winnerId || nextMatch.team2?.id === match.winnerId);
-
-            newConnections.push({
-              id: `${match.matchId}-${nextMatch.matchId}`,
-              x1,
-              y1,
-              x2,
-              y2,
-              isHighlighted: !!isWinnerPropagated,
-              isLive: match.status === "LIVE",
-            });
-          }
-        }
-      });
-    }
-    setConnections(newConnections);
-  };
-
   useEffect(() => {
+    const updatePaths = () => {
+      if (!containerRef.current || rounds.length < 2) {
+        setConnections([]);
+        return;
+      }
+      const newConnections = [];
+      const containerRect = containerRef.current.getBoundingClientRect();
+
+      for (let rIdx = 0; rIdx < rounds.length - 1; rIdx++) {
+        const currentMatches = rounds[rIdx].matches;
+        const nextMatches = rounds[rIdx + 1].matches;
+
+        currentMatches.forEach((match, mIdx) => {
+          let nextMatchIdx = -1;
+
+          // 1. Try to find match in next round by matching winner team ID
+          if (match.winnerId) {
+            nextMatchIdx = nextMatches.findIndex(
+              (nm) => nm.team1?.id === match.winnerId || nm.team2?.id === match.winnerId
+            );
+          }
+
+          // 2. Fallback to index-based connection
+          if (nextMatchIdx === -1) {
+            nextMatchIdx = Math.floor(mIdx / 2);
+          }
+
+          if (nextMatchIdx >= 0 && nextMatchIdx < nextMatches.length) {
+            const nextMatch = nextMatches[nextMatchIdx];
+            const startEl = document.getElementById(`match-node-${match.matchId}`);
+            const endEl = document.getElementById(`match-node-${nextMatch.matchId}`);
+
+            if (startEl && endEl) {
+              const startRect = startEl.getBoundingClientRect();
+              const endRect = endEl.getBoundingClientRect();
+
+              const x1 = startRect.right - containerRect.left;
+              const y1 = startRect.top + startRect.height / 2 - containerRect.top;
+
+              const x2 = endRect.left - containerRect.left;
+              const y2 = endRect.top + endRect.height / 2 - containerRect.top;
+
+              const isWinnerPropagated = match.winnerId &&
+                (nextMatch.team1?.id === match.winnerId || nextMatch.team2?.id === match.winnerId);
+
+              newConnections.push({
+                id: `${match.matchId}-${nextMatch.matchId}`,
+                x1,
+                y1,
+                x2,
+                y2,
+                isHighlighted: !!isWinnerPropagated,
+                isLive: match.status === "LIVE",
+              });
+            }
+          }
+        });
+      }
+      setConnections(newConnections);
+    };
+
     updatePaths();
     
     // Set up MutationObserver to detect layout changes
@@ -130,7 +130,7 @@ export default function TournamentBracket({ matches = [], eventName = "" }) {
       observer.disconnect();
       clearInterval(interval);
     };
-  }, [matches]);
+  }, [rounds]);
 
   if (matches.length === 0) {
     return (

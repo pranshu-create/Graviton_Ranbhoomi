@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShieldAlert } from "lucide-react";
@@ -20,6 +21,7 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const [isLockdown, setIsLockdown] = useState(false);
@@ -38,21 +40,82 @@ export default function Navbar() {
 
   // Check login status on mount and when pathname changes
   useEffect(() => {
-    const checkLoginStatus = () => {
-      const status = localStorage.getItem("isLoggedIn") === "true";
-      setIsLoggedIn(status);
+    let isMounted = true;
+
+    const checkLoginStatus = async () => {
+      // If we are actively on the login page or admin-login, immediately show unauthenticated UI
+      if (pathname === "/login" || pathname === "/admin-login") {
+        if (isMounted) {
+          setIsLoggedIn(false);
+          setIsAdmin(false);
+        }
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/auth/me", { cache: "no-store" });
+        const data = await res.json();
+        if (!isMounted) return;
+
+        if (data && data.authenticated) {
+          setIsLoggedIn(true);
+          setIsAdmin(!!data.isAdmin);
+          localStorage.setItem("isLoggedIn", "true");
+          if (data.isAdmin) {
+            localStorage.setItem("adminEmail", data.adminEmail || data.email);
+            // CRITICAL: Ensure admin session never pollutes userEmail
+            localStorage.removeItem("userEmail");
+          } else {
+            if (data.email) {
+              localStorage.setItem("userEmail", data.email);
+            }
+          }
+        } else {
+          setIsLoggedIn(false);
+          setIsAdmin(false);
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("adminEmail");
+        }
+      } catch {
+        if (!isMounted) return;
+        setIsLoggedIn(false);
+        setIsAdmin(false);
+      }
     };
+
     checkLoginStatus();
     
     // Also listen for a custom event we can dispatch on login/logout
     window.addEventListener("auth-change", checkLoginStatus);
-    return () => window.removeEventListener("auth-change", checkLoginStatus);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("auth-change", checkLoginStatus);
+    };
   }, [pathname]);
 
-  const handleLogout = () => {
+  // Close mobile menu on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/logout", { method: "POST" });
+    } catch (err) {
+      console.error("Logout request failed:", err);
+    }
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("adminEmail");
     setIsLoggedIn(false);
+    setIsAdmin(false);
     window.dispatchEvent(new Event("auth-change"));
     router.push("/");
   };
@@ -80,7 +143,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-3 md:gap-4">
-              <img src="/Logo.png" alt="Graviton Robotics Logo" className="h-16 w-auto object-contain" />
+              <Image src="/Logo.png" alt="Graviton Robotics Logo" width={64} height={64} className="h-16 w-auto object-contain" priority />
               <span className="font-display font-bold text-2xl md:text-3xl text-white tracking-widest hidden sm:block">
                 RAN<span className="text-neon-cyan text-glow-cyan">BHOOMI</span>
               </span>
@@ -112,11 +175,11 @@ export default function Navbar() {
             {isLoggedIn ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href={isAdmin ? "/super-admin" : "/dashboard"}
                   style={cutCorners}
                   className="font-mono text-[11px] text-neon-cyan border border-neon-cyan px-3 py-2 hover:bg-neon-cyan/10 transition-colors tracking-widest"
                 >
-                  DASHBOARD
+                  {isAdmin ? "ADMIN HQ" : "DASHBOARD"}
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -150,9 +213,11 @@ export default function Navbar() {
           <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-neon-cyan hover:text-white focus:outline-none"
+              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isOpen}
+              className="text-neon-cyan hover:text-white focus:outline-none focus:ring-2 focus:ring-neon-cyan/50 p-2 rounded"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -182,12 +247,12 @@ export default function Navbar() {
                 {isLoggedIn ? (
                   <>
                     <Link
-                      href="/dashboard"
+                      href={isAdmin ? "/super-admin" : "/dashboard"}
                       onClick={() => setIsOpen(false)}
                       style={cutCorners}
                       className="text-center bg-neon-cyan/10 border border-neon-cyan text-neon-cyan py-3 font-mono text-sm tracking-widest"
                     >
-                      DASHBOARD
+                      {isAdmin ? "ADMIN HQ" : "DASHBOARD"}
                     </Link>
                     <button
                       onClick={() => {

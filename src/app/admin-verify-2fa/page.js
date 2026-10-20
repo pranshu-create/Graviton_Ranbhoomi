@@ -16,9 +16,10 @@ export default function AdminVerify2FAPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedEmail = localStorage.getItem("adminEmail") || "";
-      setEmail(storedEmail);
       if (!storedEmail) {
         router.push("/admin-login");
+      } else {
+        setTimeout(() => setEmail(storedEmail), 0);
       }
     }
   }, [router]);

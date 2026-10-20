@@ -66,7 +66,6 @@ export default function JarvisOverlay({
         };
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleListening = useCallback(() => {
